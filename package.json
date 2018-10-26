@@ -1,0 +1,24 @@
+{
+  "name": "bot-titlechange",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "",
+  "main": "bot-titlechange.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RAnders00/bot-titlechange.git"
+  },
+  "author": "Ruben Anders <ruben.anders@zwb3.de>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/RAnders00/bot-titlechange/issues"
+  },
+  "homepage": "https://github.com/RAnders00/bot-titlechange#readme",
+  "dependencies": {
+    "node-persist": "^3.0.1",
+    "request-promise": "^4.2.2",
+    "tmi.js": "^1.2.1"
+  }
+}
