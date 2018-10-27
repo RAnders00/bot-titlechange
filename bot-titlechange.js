@@ -404,7 +404,7 @@ async function xD(channelName, context, params) {
 
 async function setData(channelName, context, params) {
 
-    if (context["username"] !== "randers00") {
+    if (!config.administrators.includes(context["username"])) {
         return;
     }
 
@@ -418,7 +418,7 @@ async function setData(channelName, context, params) {
 
 function debugData(channelName, context, params) {
 
-    if (context["username"] !== "randers00") {
+    if (!config.administrators.includes(context["username"])) {
         return;
     }
 
@@ -434,7 +434,7 @@ function debugData(channelName, context, params) {
 
 async function debug(channelName, context, params) {
 
-    if (context["username"] !== "randers00") {
+    if (!config.administrators.includes(context["username"])) {
         return;
     }
 
@@ -456,7 +456,7 @@ async function debug(channelName, context, params) {
 
 async function quit(channelName, context, params) {
 
-    if (administrators.contains(context["username"])) {
+    if (!config.administrators.includes(context["username"])) {
         return;
     }
 
