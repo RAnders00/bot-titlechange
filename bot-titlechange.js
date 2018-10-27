@@ -399,7 +399,7 @@ async function ping(channelName, context, params) {
 }
 
 async function xD(channelName, context, params) {
-    await sendReply(channelName, context["display-name"], "xD");
+    await sendMessage(channelName, "xD");
 }
 
 async function setData(channelName, context, params) {
