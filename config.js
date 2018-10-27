@@ -27,6 +27,9 @@ let administrators = [
     'randers00'
 ];
 
+// The bot will post a "I am running"-style message to this channel on startup.
+const startupChannel = 'randers00';
+
 // tip: use !userid <usernames...> command in the #pajlada chat to get user IDs
 // add the "protection" object to enable pajbot banphrase checking protection
 let enabledChannels = {
@@ -79,5 +82,6 @@ module.exports = {
     "commandPrefix": commandPrefix,
     "krakenClientId": krakenClientId,
     "administrators": administrators,
+    "startupChannel": startupChannel,
     "enabledChannels": enabledChannels
 };
