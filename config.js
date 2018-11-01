@@ -11,6 +11,8 @@ const opts = {
         '#randers00',
         '#forsen',
         '#akkirasetsu',
+        '#supinic',
+        '#zflare3',
         '#pajlada'/**/
     ]
 };
@@ -65,6 +67,24 @@ let enabledChannels = {
         "protection": {
             "endpoint": "https://paj.pajlada.se/api/v1/banphrases/test"
         }
+    },
+    "supinic": {
+        "id": 31400525,
+        "formats": {
+            "title": "/me PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "/me PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "/me ppHop supinic has gone live ppHop 👉 ",
+            "offline": "/me FeelsBadMan supinic has gone offline FeelsBadMan 👉 "
+        },
+    },
+    "zflare3": {
+        "id": 143339442,
+        "formats": {
+            "title": "/me Bestboy NEW TITLE! Bestboy  👉 $VALUE$ 👉 ",
+            "game": "/me Bestboy NEW GAME! Bestboy  👉 $VALUE$ 👉 ",
+            "live": "/me Bestboy Zflare3 has gone live Bestboy  👉 ",
+            "offline": "/me FeelsBadMan Zflare3 has gone offline FeelsBadMan 👉 "
+        },
     },
     "akkirasetsu": {
         "id": 117423271,
