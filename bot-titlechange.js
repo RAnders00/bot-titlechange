@@ -175,6 +175,9 @@ async function runChangeNotify(channelName, key, value) {
 
         // get the message format
         let eventFormat = formats[eventName];
+        if (key === "live" && !value) {
+            eventFormat = formats["offline"];
+        }
 
         // substitute $VALUE$ with the actual value
         eventFormat = eventFormat.replace(valueRegex, value);
