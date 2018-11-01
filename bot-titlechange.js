@@ -3,6 +3,8 @@
 const tmi = require('tmi.js');
 const request = require('request-promise');
 const storage = require('node-persist');
+const AsyncLock = require('node-async-locks').AsyncLock;
+const Timer = require('./edit-timer').Timer;
 const config = require('./config');
 
 function sleep(ms) {
@@ -230,7 +232,6 @@ async function runChangeNotify(channelName, key, value) {
             await sendMessage(channelName, msg);
         }
     }
-
 
 }
 
@@ -511,17 +512,48 @@ async function sendReply(channelName, username, message) {
 }
 
 let lastEgressMessages = [];
+let egressMessageLocks = [];
+let egressMessageTimers = [];
 
 async function sendMessage(channelName, message) {
-    let lastEgressMessage = lastEgressMessages[channelName];
-
-    if (lastEgressMessage === message) {
-        message += ' \u206D';
+    // get lock
+    let lock = egressMessageLocks[channelName];
+    if (typeof lock === "undefined") {
+        lock = new AsyncLock();
+        egressMessageLocks[channelName] = lock;
     }
-    console.log(`EGRESS [to: ${channelName}] >${message}<`);
-    await client.say("#" + channelName, message);
-    lastEgressMessages[channelName] = message;
-    await sleep(1650);
+
+    // lock for this channel
+    // lock.enter does not take async functions. wrap the whole call inside yet
+    // another async function and execute immediately.
+    lock.enter((token) => {
+        console.log(`locked ${channelName}`);
+        (async function() {
+            let lastEgressMessage = lastEgressMessages[channelName];
+
+            if (lastEgressMessage === message) {
+                message += ' \u206D';
+            }
+            console.log(`EGRESS [to: ${channelName}] >${message}<`);
+            await client.say("#" + channelName, message);
+            lastEgressMessages[channelName] = message;
+
+            // sleep (lock this channel) for 1650 ms (1200ms is minimum, but 1650 prevents us exceeding global limits)
+            // use a extendable timer in case we get timed out (then wait longer until lock release)
+            // see the onTimeoutHandler for more details
+            await new Promise(resolve => {
+                let timer = new Timer(1650, 1650, () => {
+                    delete egressMessageTimers[channelName];
+                    resolve();
+                });
+                egressMessageTimers[channelName] = timer;
+            });
+
+            console.log(`unlocking ${channelName}`);
+            // unlock for this channel
+            token.leave();
+        })();
+    });
 }
 
 // Create a client with our options:
@@ -529,6 +561,7 @@ let client = new tmi.client(config.opts);
 
 // Register our event handlers (defined below):
 client.on('message', onMessageHandler);
+client.on('timeout', onTimeoutHandler);
 client.on('connected', onConnectedHandler);
 client.on('disconnected', onDisconnectedHandler);
 
@@ -587,6 +620,50 @@ function onMessageHandler(target, context, msg, self) {
             console.log(`* Executed ${commandName} command for ${context.username}`);
         }
     }
+}
+
+function onTimeoutHandler(channelName, username, reason, duration) {
+    const ourUsername = config.opts.identity.username;
+    if (username !== ourUsername) {
+        return;
+    }
+
+    // trim away the leading # character
+    channelName = channelName.substring(1);
+
+    let timer = egressMessageTimers[channelName];
+    if (typeof timer === "undefined") {
+        // get lock
+        let lock = egressMessageLocks[channelName];
+        if (typeof lock === "undefined") {
+            lock = new AsyncLock();
+            egressMessageLocks[channelName] = lock;
+        }
+
+        // create a timer and lock
+        lock.enter((token) => {
+            console.log(`locked ${channelName} via timeout handler`);
+            (async function() {
+                await new Promise(resolve => {
+                    timer = new Timer(duration * 1000, 0, () => {
+                        delete egressMessageTimers[channelName];
+                        resolve();
+                    });
+                    egressMessageTimers[channelName] = timer;
+                });
+
+                console.log(`unlocking ${channelName} from timeout handler`);
+                // unlock for this channel
+                token.leave();
+            })();
+        });
+
+        return;
+    }
+
+    // extend the existing timer.
+    // duration is in seconds, we need milliseconds here.
+    timer.update(duration * 1000);
 }
 
 function onConnectedHandler(addr, port) {
