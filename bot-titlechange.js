@@ -207,7 +207,7 @@ async function runChangeNotify(channelName, key, value) {
             let user = userList[i];
 
             let newMessage = msg + user;
-            if (newMessage.length > 300) {
+            if (newMessage.length > 180) {
                 // send out the current message and start a new message
                 await sendMessage(channelName, msg);
                 currentMsgUserCount = 0;
