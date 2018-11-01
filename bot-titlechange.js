@@ -11,7 +11,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const knownCommands = [events, notifyme, removeme, subscribed, help, bot, ping, setData, debugData, debug, quit, xD];
+const knownCommands = [events, notifyme, removeme, subscribed, help, bot, ping, setData, debugData, debug, quit];
 
 // the main data storage object.
 // stores for each channel (key):
@@ -400,10 +400,6 @@ async function bot(channelName, context, params) {
 
 async function ping(channelName, context, params) {
     await sendReply(channelName, context["display-name"], "Reporting for duty NaM 7");
-}
-
-async function xD(channelName, context, params) {
-    await sendMessage(channelName, "xD");
 }
 
 async function setData(channelName, context, params) {
