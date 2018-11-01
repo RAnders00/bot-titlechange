@@ -151,8 +151,45 @@ async function updateChannelProperty(channel, key, value) {
 
 const valueRegex = /\$VALUE\$/g;
 
+// in reality the API can sometimes be indecisive at boundary points (e.g. when channel goes offline, it
+// can return live -> live -> live -> (channel goes offline) -> offline -> live (causes wrong notify) -> offline
+// remember the last dates when notifies were sent, and dont send too fast if key changes again
+// this array is indexed by the value key, e.g. "title", "game", "live" (and not "offline")
+const lastNotifies = {};
+// in milliseconds, for each channel and each value
+// 12 seconds to survive three refreshes (every 5 seconds)
+const notifyCooldown = 12000;
+
 async function runChangeNotify(channelName, key, value) {
     console.log(`notify: ${channelName} ${key} ${value}`);
+
+    //
+    // notify cooldown
+    //
+    let channelLastNotifies = lastNotifies[channelName];
+    if (typeof channelLastNotifies === "undefined") {
+        channelLastNotifies = {};
+        lastNotifies[channelName] = channelLastNotifies;
+    }
+
+    let lastNotified = channelLastNotifies[key];
+    if (typeof lastNotified === "undefined") {
+        lastNotified = 0;
+    }
+    let timeNow = Date.now();
+    let timeSinceLastNotify = timeNow - lastNotified;
+    if (timeSinceLastNotify <= notifyCooldown) {
+        // notify wasn't run, don't save the time.
+        console.log(`lastNotified: ${lastNotified}`);
+        console.log(`timeSinceLastNotify: ${timeSinceLastNotify}`);
+        console.log("skipping notify due to cooldown");
+        return;
+    }
+    channelLastNotifies[key] = timeNow;
+
+    //
+    // username processing
+    //
     let channelData = config.enabledChannels[channelName];
     let formats = channelData["formats"];
 
@@ -166,9 +203,9 @@ async function runChangeNotify(channelName, key, value) {
         value = "[banphrased value]";
     }
 
-    ///
-    ///  now do the pings.
-    ///
+    //
+    //  now do the pings.
+    //
     for (let [eventName, eventConfig] of Object.entries(availableEvents)) {
         if (!(eventConfig["matcher"](key, value))) {
             // event does not match.
