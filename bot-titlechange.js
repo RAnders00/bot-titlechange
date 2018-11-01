@@ -141,7 +141,7 @@ async function updateChannelProperty(channel, key, value) {
 
     // oldValue actually needs to be something valid, otherwise
     // this is the first run that populates the table
-    if (typeof oldValue !== "undefined" && oldValue !== null && oldValue !== value) {
+    if (oldValue != null && value != null && oldValue !== value) {
         await runChangeNotify(channel, key, value);
     }
 
