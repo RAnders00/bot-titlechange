@@ -528,7 +528,7 @@ async function sendMessage(channelName, message) {
     // another async function and execute immediately.
     lock.enter((token) => {
         console.log(`locked ${channelName}`);
-        (async function() {
+        (async () => {
             let lastEgressMessage = lastEgressMessages[channelName];
 
             if (lastEgressMessage === message) {
@@ -643,7 +643,7 @@ function onTimeoutHandler(channelName, username, reason, duration) {
         // create a timer and lock
         lock.enter((token) => {
             console.log(`locked ${channelName} via timeout handler`);
-            (async function() {
+            (async () => {
                 await new Promise(resolve => {
                     timer = new Timer(duration * 1000, 0, () => {
                         delete egressMessageTimers[channelName];
