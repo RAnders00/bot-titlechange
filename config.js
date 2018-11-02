@@ -34,6 +34,9 @@ const startupChannel = 'randers00';
 
 // tip: use !userid <usernames...> command in the #pajlada chat to get user IDs
 // add the "protection" object to enable pajbot banphrase checking protection
+// add lengthLimit and/or valueLengthLimit to set message length limits and length limits
+// for the value printed into notify messages (value will be clipped otherwise)
+// add offlineOnly = true to make the bot only print notifies while channel is offline (or changing live status)
 let enabledChannels = {
     "randers00": {
         "id": 40286300,
@@ -42,6 +45,8 @@ let enabledChannels = {
             "game": "/me PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
             "live": "/me ppHop randers00 is live ppHop 👉 ",
             "offline": "/me MistyHisty randers00 has gone offline MistyHisty 👉 "
+        }, "protection": {
+            "valueLengthLimit": 80
         }
     },
     "forsen": {
@@ -53,7 +58,8 @@ let enabledChannels = {
             "offline": "/me FeelsBadMan FORSEN HAS GONE OFFLINE! FeelsBadMan 👉 "
         },
         "protection": {
-            "endpoint": "https://forsen.tv/api/v1/banphrases/test"
+            "endpoint": "https://forsen.tv/api/v1/banphrases/test",
+            "offlineOnly": true
         }
     },
     "pajlada": {

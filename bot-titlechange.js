@@ -203,6 +203,32 @@ async function runChangeNotify(channelName, key, value) {
         value = "[banphrased value]";
     }
 
+    let protection = channelData["protection"] || {};
+    // do we have a char limit (for whole messages)? otherwise use global limit of 400.
+    let lengthLimit = protection["lengthLimit"] || 400;
+
+    // do we have a value length limit? (e.g. length limit for the title/game/etc. field)?
+    // If not use 1/4 of the length limit.
+    let valueLengthLimit = protection["valueLengthLimit"] || (lengthLimit / 4);
+
+    // clip value length
+    if (value.length > valueLengthLimit) {
+        // shorten value to length - 1, to leave one char space for the ellipsis character
+        value = value.substring(0, valueLengthLimit - 1);
+        value += "\u2026";
+    }
+
+    let offlineChatOnly = protection["offlineOnly"];
+    if (typeof offlineChatOnly === "undefined") {
+        offlineChatOnly = false;
+    }
+
+    if (offlineChatOnly && key !== "live" && currentData[channelName]["live"]) {
+        // skip this notify, since channel is online and it was not a live/offline notify.
+        console.log("Skipping notify due to channel being online and offline-only protection being active.");
+        return;
+    }
+
     //
     //  now do the pings.
     //
@@ -249,7 +275,7 @@ async function runChangeNotify(channelName, key, value) {
             let user = userList[i];
 
             let newMessage = msg + user;
-            if (newMessage.length > 180) {
+            if (newMessage.length > lengthLimit) {
                 // send out the current message and start a new message
                 await sendMessage(channelName, msg);
                 currentMsgUserCount = 0;
@@ -507,8 +533,8 @@ async function quit(channelName, context, params) {
 async function isMessageBanphrased(channelName, message) {
     let channelProtectionData = config.enabledChannels[channelName]["protection"];
 
-    if (typeof channelProtectionData === "undefined" || channelProtectionData === null) {
-        // protection not enabled in that channel
+    if (channelProtectionData == null || channelProtectionData["endpoint"] == null) {
+        // banphrase protection not enabled in that channel
         return false;
     }
 
