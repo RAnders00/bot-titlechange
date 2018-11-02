@@ -487,7 +487,7 @@ async function debug(channelName, context, params) {
         console.log(result);
     } catch (e) {
         console.log(e);
-        await sendReply(channelName, context["display-name"], "Error thrown");
+        await sendReply(channelName, context["display-name"], `Error thrown: ${String(e)}`);
     }
 }
 
