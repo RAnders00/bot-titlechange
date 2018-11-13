@@ -13,6 +13,7 @@ const opts = {
         '#akkirasetsu',
         '#supinic',
         '#zflare3',
+        '#nymn',
         '#pajlada'/**/
     ]
 };
@@ -36,6 +37,7 @@ const startupChannel = 'randers00';
 // add the "protection" object to enable pajbot banphrase checking protection
 // add lengthLimit and/or valueLengthLimit to set message length limits and length limits
 // for the value printed into notify messages (value will be clipped otherwise)
+// if unset, default values of 400 and lengthLimit/4 will be used
 // add offlineOnly = true to make the bot only print notifies while channel is offline (or changing live status)
 let enabledChannels = {
     "randers00": {
@@ -91,6 +93,19 @@ let enabledChannels = {
             "live": "/me Bestboy Zflare3 has gone live Bestboy  👉 ",
             "offline": "/me FeelsBadMan Zflare3 has gone offline FeelsBadMan 👉 "
         },
+    },
+    "nymn": {
+        "id": 62300805,
+        "formats": {
+            "title": "/me PogU NEW TITLE! PogU 👉 $VALUE$ 👉 ",
+            "game": "/me PogU NEW GAME! PogU 👉 $VALUE$ 👉 ",
+            "live": "/me PogU NYMN HAS GONE LIVE! PogU 👉 ",
+            "offline": "/me FeelsBadMan NYMN HAS GONE OFFLINE! FeelsBadMan 👉 "
+        },
+        "protection": {
+            "endpoint": "https://nymn.pajbot.com/api/v1/banphrases/test",
+            "lengthLimit": 300 // only in online chat
+        }
     },
     "akkirasetsu": {
         "id": 117423271,
