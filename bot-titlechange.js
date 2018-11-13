@@ -4,6 +4,7 @@ const tmi = require('tmi.js');
 const request = require('request-promise');
 const storage = require('node-persist');
 const AsyncLock = require('node-async-locks').AsyncLock;
+const escapeStringRegexp = require('escape-string-regexp');
 const Timer = require('./edit-timer').Timer;
 const config = require('./config');
 
@@ -195,14 +196,6 @@ async function runChangeNotify(channelName, key, value) {
 
     let channelPingLists = pingLists[channelName] || {};
 
-    // ensure value is not banphrased
-    let isValueBanphrased = await isMessageBanphrased(channelName, value);
-    if (isValueBanphrased === null) {
-        value = "[cannot comply, banphrase api failed to respond]";
-    } else if (isValueBanphrased) {
-        value = "[banphrased value]";
-    }
-
     let protection = channelData["protection"] || {};
     // do we have a char limit (for whole messages)? otherwise use global limit of 400.
     let lengthLimit = protection["lengthLimit"] || 400;
@@ -257,16 +250,6 @@ async function runChangeNotify(channelName, key, value) {
             continue;
         }
 
-        for (let i = 0; i < userList.length; i++) {
-            let user = userList[i];
-            let isUsernameBanphrased = await isMessageBanphrased(channelName, user);
-            if (isUsernameBanphrased === null) {
-                userList[i] = "[cannot comply]";
-            } else if (isUsernameBanphrased) {
-                userList[i] = "[banphrased username]";
-            }
-        }
-
         // join into individual messages, each up to 400 characters long.
         // eventFormat is the message prefix
         let msg = eventFormat;
@@ -277,7 +260,7 @@ async function runChangeNotify(channelName, key, value) {
             let newMessage = msg + user;
             if (newMessage.length > lengthLimit) {
                 // send out the current message and start a new message
-                await sendMessage(channelName, msg);
+                sendMessage(channelName, msg);
                 currentMsgUserCount = 0;
                 msg = eventFormat;
             }
@@ -292,7 +275,7 @@ async function runChangeNotify(channelName, key, value) {
         }
 
         if (currentMsgUserCount > 0) {
-            await sendMessage(channelName, msg);
+            sendMessage(channelName, msg);
         }
     }
 
@@ -528,46 +511,60 @@ async function quit(channelName, context, params) {
 
 }
 
-// returns true or false if message banstatus is known,
-// returns null if status could not be determined.
-async function isMessageBanphrased(channelName, message) {
+// validates that the given input message is not banned in the given channel. If it is banned,
+// the method will recursively replace all banphrases with "***" until the message is no longer
+// banned.
+async function censorBanphrases(channelName, message) {
     let channelProtectionData = config.enabledChannels[channelName]["protection"];
 
     if (channelProtectionData == null || channelProtectionData["endpoint"] == null) {
         // banphrase protection not enabled in that channel
-        return false;
+        console.log(`banphrase check skipped for >${message}< in ch ${channelName}`);
+        return message;
     }
 
-    let options = {
-        method: 'POST',
-        json: true,
-        uri: channelProtectionData["endpoint"],
-        formData: {message: String(message)}
-    };
+    let banned = true;
+    do {
+        // detect whether message is banned, replace the banphrase if it is banned.
+        let options = {
+            method: 'POST',
+            json: true,
+            uri: channelProtectionData["endpoint"],
+            formData: {message: String(message)}
+        };
 
-    try {
-        let response = await request(options);
+        try {
+            let response = await request(options);
 
-        return response["banned"];
+            banned = response["banned"];
 
-    } catch (error) {
-        console.log(error);
+            // note: the banphrase API only returns the first detected banphrase,
+            // which is why this API call may be executed multiple times
+            // if needed.
+            if (banned) {
+                let phrase = response["banphrase_data"]["phrase"];
 
-        return null;
-    }
+                let regexEscapedBanphrase = escapeStringRegexp(phrase);
+                let phraseRegex = new RegExp(regexEscapedBanphrase, "gi");
+
+                message = message.replace(phraseRegex, "***");
+            }
+
+        } catch (error) {
+            console.log(error);
+
+            message = "cannot comply, banphrase API failed to respond monkaS";
+            break;
+        }
+    } while (banned);
+
+    console.log(`banphrase check completed for >${message}< in ch ${channelName}`);
+    return message;
 
 }
 
 async function sendReply(channelName, username, message) {
-    let isUsernameBanphrased = await isMessageBanphrased(channelName, username);
-    if (isUsernameBanphrased === null) {
-        username = "[cannot comply]";
-    } else if (isUsernameBanphrased) {
-        username = "[banphrased username]";
-    }
-
-    message = `${username}, ${message}`;
-    await sendMessage(channelName, message);
+    await sendMessage(channelName, `${username}, ${message}`);
 }
 
 let lastEgressMessages = [];
@@ -575,6 +572,12 @@ let egressMessageLocks = [];
 let egressMessageTimers = [];
 
 async function sendMessage(channelName, message) {
+    message = await censorBanphrases(channelName, message);
+    await sendMessageUnsafe(channelName, message);
+}
+
+async function sendMessageUnsafe(channelName, message) {
+
     // get lock
     let lock = egressMessageLocks[channelName];
     if (typeof lock === "undefined") {
@@ -632,7 +635,7 @@ async function connect() {
     console.log("Connecting to Twitch IRC...");
     await client.connect();
 
-    await sendMessage(config.startupChannel, 'Running!');
+    sendMessage(config.startupChannel, 'Running!');
 
     console.log("Starting refresh loop");
 
