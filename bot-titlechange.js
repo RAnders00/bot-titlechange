@@ -242,8 +242,6 @@ async function runChangeNotify(channelName, key, value) {
 
         // iterate all users. Check them individually for being banphrased
         let userList = channelPingLists[eventName] || [];
-        // copy so we dont modify the original array and replace usernames in it
-        userList = userList.slice();
 
         if (userList.length <= 0) {
             // no users signed up for this event, skip
