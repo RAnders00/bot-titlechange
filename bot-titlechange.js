@@ -12,7 +12,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const knownCommands = [events, notifyme, removeme, subscribed, help, bot, ping, setData, debugData, debug, quit];
+const knownCommands = [events, notifyme, removeme, subscribed, title, game, islive, help, bot, ping, setData, debugData, debug, quit];
 
 // the main data storage object.
 // stores for each channel (key):
@@ -422,6 +422,39 @@ async function subscribed(channelName, context, params) {
     await sendReply(channelName, context["display-name"], msg);
 }
 
+async function title(channelName, context, params) {
+
+    if (!(channelName in config.enabledChannels)) {
+        await sendReply(channelName, context["display-name"], "Error: This channel is not enabled.");
+        return;
+    }
+
+    await sendReply(channelName, context["display-name"], `Current title: ${currentData[channelName]["title"]}`);
+
+}
+
+async function game(channelName, context, params) {
+
+    if (!(channelName in config.enabledChannels)) {
+        await sendReply(channelName, context["display-name"], "Error: This channel is not enabled.");
+        return;
+    }
+
+    await sendReply(channelName, context["display-name"], `Current game: ${currentData[channelName]["game"]}`);
+
+}
+
+async function islive(channelName, context, params) {
+
+    if (!(channelName in config.enabledChannels)) {
+        await sendReply(channelName, context["display-name"], "Error: This channel is not enabled.");
+        return;
+    }
+
+    await sendReply(channelName, context["display-name"], `Current live status: ${currentData[channelName]["live"] ? "The channel is live!" : "The channel is offline :("}`);
+
+}
+
 async function help(channelName, context, params) {
 
     if (!(channelName in config.enabledChannels)) {
@@ -429,7 +462,7 @@ async function help(channelName, context, params) {
         return;
     }
 
-    await sendReply(channelName, context["display-name"], "Available commands: !notifyme [event], !removeme [event], !subscribed, !events, !help");
+    await sendReply(channelName, context["display-name"], "Available commands: !notifyme [event], !removeme [event], !subscribed, !events, !title, !game, !islive, !help");
 }
 
 async function bot(channelName, context, params) {
