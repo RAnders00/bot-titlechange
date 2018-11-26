@@ -58,7 +58,7 @@ let enabledChannels = {
             "title": "/me PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
             "game": "/me PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
             "live": "/me KKool GuitarTime FORSEN HAS GONE LIVE! KKool GuitarTime 👉 ",
-            "offline": "/me FeelsGoodMan FORSEN HAS GONE OFFLINE! FeelsGoodMan 👉 "
+            "offline": "/me FeelsGoodMan Clap FORSEN HAS GONE OFFLINE! FeelsGoodMan Clap 👉 "
         },
         "protection": {
             "endpoint": "https://forsen.tv/api/v1/banphrases/test",
