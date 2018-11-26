@@ -14,6 +14,7 @@ const opts = {
         '#supinic',
         '#zflare3',
         '#nymn',
+		'#bajlada',
         '#pajlada'/**/
     ]
 };
@@ -105,6 +106,15 @@ let enabledChannels = {
         "protection": {
             "endpoint": "https://nymn.pajbot.com/api/v1/banphrases/test",
             "lengthLimit": 300 // only in online chat
+        }
+    },
+    "bajlada": {
+        "id": 159849156,
+        "formats": {
+            "title": "/me yeetDog NEW TITLE! yeetDog 👉 $VALUE$ 👉 ",
+            "game": "/me yeetDog NEW GAME! yeetDog 👉 $VALUE$ 👉 ",
+            "live": "/me yeetDog bajlada HAS GONE LIVE! yeetDog 👉 ",
+            "offline": "/me yeetDog bajlada HAS GONE OFFLINE! yeetDog 👉 "
         }
     },
     "akkirasetsu": {
