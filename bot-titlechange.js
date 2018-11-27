@@ -12,7 +12,22 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const knownCommands = [events, notifyme, removeme, subscribed, title, game, islive, help, bot, ping, setData, debugData, debug, quit];
+const knownCommands = [events,
+    notifyme,
+    removeme,
+    subscribed,
+    title,
+    game,
+    islive,
+    help,
+    bot,
+    titlechange_bot,
+    titlechangebot,
+    ping,
+    setData,
+    debugData,
+    debug,
+    quit];
 
 // the main data storage object.
 // stores for each channel (key):
@@ -475,6 +490,14 @@ async function bot(channelName, context, params) {
     await sendReply(channelName, context["display-name"], "I am a bot made by RAnders00. I can notify you when the channel goes live or the title changes. Try !help for a list of commands. pajaDank");
 }
 
+async function titlechange_bot(channelName, context, params) {
+    await bot(channelName, context, params);
+}
+
+async function titlechangebot(channelName, context, params) {
+    await bot(channelName, context, params);
+}
+
 async function ping(channelName, context, params) {
     await sendReply(channelName, context["display-name"], "Reporting for duty NaM 7");
 }
@@ -707,8 +730,20 @@ function onMessageHandler(target, context, msg, self) {
     const params = parse.splice(1);
 
 
+    let channelConfig = config.enabledChannels[target];
+    if (channelConfig == null) {
+        return;
+    }
+    let disabledCommands = (channelConfig.protection || {}).disabledCommands || [];
+
     for (let i = 0; i < knownCommands.length; i++) {
         if (knownCommands[i].name.toUpperCase() === commandName.toUpperCase()) {
+            // is the command disabled?
+            if (disabledCommands.includes(commandName.toLowerCase())) {
+                console.log(`Not executing ${commandName} for ${context.username} because command is disabled in ${target}`);
+                continue;
+            }
+
             knownCommands[i](target, context, params);
             console.log(`* Executed ${commandName} command for ${context.username}`);
         }

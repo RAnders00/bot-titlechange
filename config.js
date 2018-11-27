@@ -40,6 +40,7 @@ const startupChannel = 'randers00';
 // for the value printed into notify messages (value will be clipped otherwise)
 // if unset, default values of 400 and lengthLimit/4 will be used
 // add offlineOnly = true to make the bot only print notifies while channel is offline (or changing live status)
+// disabledCommands can be an array of (lowercase) command names to disable
 let enabledChannels = {
     "randers00": {
         "id": 40286300,
@@ -74,7 +75,11 @@ let enabledChannels = {
             "offline": "/me pajaSad pajlada has gone offline pajaSad 👉 "
         },
         "protection": {
-            "endpoint": "https://paj.pajlada.se/api/v1/banphrases/test"
+            "endpoint": "https://paj.pajlada.se/api/v1/banphrases/test",
+            "disabledCommands": [
+                "bot",
+                "ping"
+            ]
         }
     },
     "supinic": {
