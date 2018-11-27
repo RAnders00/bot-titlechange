@@ -94,9 +94,9 @@ let enabledChannels = {
     "zflare3": {
         "id": 143339442,
         "formats": {
-            "title": "/me Bestboy NEW TITLE! Bestboy  👉 $VALUE$ 👉 ",
-            "game": "/me Bestboy NEW GAME! Bestboy  👉 $VALUE$ 👉 ",
-            "live": "/me Bestboy Zflare3 has gone live Bestboy  👉 ",
+            "title": "/me Bestboy NEW TITLE! Bestboy 👉 $VALUE$ 👉 ",
+            "game": "/me Bestboy NEW GAME! Bestboy 👉 $VALUE$ 👉 ",
+            "live": "/me Bestboy Zflare3 has gone live Bestboy 👉 ",
             "offline": "/me FeelsBadMan Zflare3 has gone offline FeelsBadMan 👉 "
         },
     },
