@@ -111,7 +111,11 @@ let enabledChannels = {
         },
         "protection": {
             "endpoint": "https://nymn.pajbot.com/api/v1/banphrases/test",
-            "lengthLimit": 300 // only in online chat
+            "lengthLimit": 300, // only in online chat
+            "noPingMode": true,
+            "disabledCommands": [
+                "notifyme"
+            ]
         }
     },
     "bajlada": {

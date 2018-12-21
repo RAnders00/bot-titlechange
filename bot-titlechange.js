@@ -242,6 +242,11 @@ async function runChangeNotify(channelName, key, value) {
         return;
     }
 
+    let noPingMode = protection["noPingMode"];
+    if (noPingMode == null) {
+        noPingMode = false;
+    }
+
     //
     //  now do the pings.
     //
@@ -259,6 +264,12 @@ async function runChangeNotify(channelName, key, value) {
 
         // substitute $VALUE$ with the actual value
         eventFormat = eventFormat.replace(valueRegex, value);
+
+        // send this notify WITHOUT any pings, just one message. return immediately.
+        if (noPingMode) {
+            sendMessage(channelName, eventFormat);
+            return;
+        }
 
         let userList = channelPingLists[eventName] || [];
 
