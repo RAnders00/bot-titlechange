@@ -104,9 +104,9 @@ let enabledChannels = {
     "nymn": {
         "id": 62300805,
         "formats": {
-            "title": "/me PogU NEW TITLE! PogU 👉 $VALUE$ 👉 ",
-            "game": "/me PogU NEW GAME! PogU 👉 $VALUE$ 👉 ",
-            "live": "/me PogU NYMN HAS GONE LIVE! PogU 👉 ",
+            "title": "/me peepoPog NEW TITLE! peepoPog 👉 $VALUE$ 👉 ",
+            "game": "/me peepoPog NEW GAME! peepoPog 👉 $VALUE$ 👉 ",
+            "live": "/me peepoPog NYMN HAS GONE LIVE! peepoPog 👉 ",
             "offline": "/me FeelsBadMan NYMN HAS GONE OFFLINE! FeelsBadMan 👉 "
         },
         "protection": {
