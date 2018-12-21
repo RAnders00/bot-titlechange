@@ -101,23 +101,6 @@ let enabledChannels = {
             "offline": "/me FeelsBadMan Zflare3 has gone offline FeelsBadMan 👉 "
         },
     },
-    "nymn": {
-        "id": 62300805,
-        "formats": {
-            "title": "/me peepoPog NEW TITLE! peepoPog 👉 $VALUE$ 👉 ",
-            "game": "/me peepoPog NEW GAME! peepoPog 👉 $VALUE$ 👉 ",
-            "live": "/me peepoPog NYMN HAS GONE LIVE! peepoPog 👉 ",
-            "offline": "/me FeelsBadMan NYMN HAS GONE OFFLINE! FeelsBadMan 👉 "
-        },
-        "protection": {
-            "endpoint": "https://nymn.pajbot.com/api/v1/banphrases/test",
-            "lengthLimit": 300, // only in online chat
-            "noPingMode": true,
-            "disabledCommands": [
-                "notifyme"
-            ]
-        }
-    },
     "bajlada": {
         "id": 159849156,
         "formats": {
