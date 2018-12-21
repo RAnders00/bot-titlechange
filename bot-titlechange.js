@@ -12,7 +12,8 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const knownCommands = [events,
+const knownCommands = [
+    events,
     notifyme,
     removeme,
     subscribed,
@@ -20,6 +21,10 @@ const knownCommands = [events,
     game,
     islive,
     help,
+    titlechangebot_help,
+    titlechangebothelp,
+    tcb_help,
+    tcbhelp,
     bot,
     titlechange_bot,
     titlechangebot,
@@ -478,6 +483,22 @@ async function help(channelName, context, params) {
     }
 
     await sendReply(channelName, context["display-name"], "Available commands: !notifyme [event], !removeme [event], !subscribed, !events, !title, !game, !islive, !help");
+}
+
+async function titlechangebot_help(channelName, context, params) {
+    await help(channelName, context, params);
+}
+
+async function titlechangebothelp(channelName, context, params) {
+    await help(channelName, context, params);
+}
+
+async function tcb_help(channelName, context, params) {
+    await help(channelName, context, params);
+}
+
+async function tcbhelp(channelName, context, params) {
+    await help(channelName, context, params);
 }
 
 async function bot(channelName, context, params) {

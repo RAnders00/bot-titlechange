@@ -78,7 +78,8 @@ let enabledChannels = {
             "endpoint": "https://paj.pajlada.se/api/v1/banphrases/test",
             "disabledCommands": [
                 "bot",
-                "ping"
+                "ping",
+                "help"
             ]
         }
     },
