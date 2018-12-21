@@ -260,7 +260,6 @@ async function runChangeNotify(channelName, key, value) {
         // substitute $VALUE$ with the actual value
         eventFormat = eventFormat.replace(valueRegex, value);
 
-        // iterate all users. Check them individually for being banphrased
         let userList = channelPingLists[eventName] || [];
 
         if (userList.length <= 0) {
