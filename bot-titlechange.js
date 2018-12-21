@@ -217,8 +217,8 @@ async function runChangeNotify(channelName, key, value) {
     let channelPingLists = pingLists[channelName] || {};
 
     let protection = channelData["protection"] || {};
-    // do we have a char limit (for whole messages)? otherwise use global limit of 400.
-    let lengthLimit = protection["lengthLimit"] || 400;
+    // do we have a char limit (for whole messages)? otherwise use global limit of 500.
+    let lengthLimit = protection["lengthLimit"] || 500;
 
     // do we have a value length limit? (e.g. length limit for the title/game/etc. field)?
     // If not use 1/4 of the length limit.
