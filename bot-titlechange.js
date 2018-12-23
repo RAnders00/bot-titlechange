@@ -649,7 +649,7 @@ async function censorBanphrases(channelName, message) {
 }
 
 async function sendReply(channelName, username, message) {
-    await sendMessage(channelName, `${username}, ${message}`);
+    await sendMessage(channelName, `@${username}, ${message}`);
 }
 
 let lastEgressMessages = [];
