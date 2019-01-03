@@ -119,3 +119,5 @@ fabric.properties
 
 ### custom rules
 /secrets.js
+
+/autofollow.js

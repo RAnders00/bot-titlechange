@@ -14,6 +14,7 @@ const opts = {
         '#supinic',
         '#zflare3',
         '#nymn',
+        '#vadikus007',
 		'#bajlada',
         '#pajlada'/**/
     ]
@@ -79,7 +80,9 @@ let enabledChannels = {
             "disabledCommands": [
                 "bot",
                 "ping",
-                "help"
+                "help",
+				"game",
+				"title"
             ]
         }
     },
@@ -101,6 +104,23 @@ let enabledChannels = {
             "offline": "/me FeelsBadMan Zflare3 has gone offline FeelsBadMan 👉 "
         },
     },
+    "nymn": {
+        "id": 62300805,
+        "formats": {
+            "title": "/me peepoPog NEW TITLE! peepoPog 👉 $VALUE$ 👉 ",
+            "game": "/me peepoPog NEW GAME! peepoPog 👉 $VALUE$ 👉 ",
+            "live": "/me peepoPog NYMN HAS GONE LIVE! peepoPog 👉 ",
+            "offline": "/me FeelsBadMan NYMN HAS GONE OFFLINE! FeelsBadMan 👉 "
+        },
+        "protection": {
+            "endpoint": "https://nymn.pajbot.com/api/v1/banphrases/test",
+            "lengthLimit": 300, // only in online chat
+            //"noPingMode": true,
+            "disabledCommands": [
+               // "notifyme"
+            ]
+        }
+    },
     "bajlada": {
         "id": 159849156,
         "formats": {
@@ -108,6 +128,18 @@ let enabledChannels = {
             "game": "/me yeetDog NEW GAME! yeetDog 👉 $VALUE$ 👉 ",
             "live": "/me yeetDog bajlada HAS GONE LIVE! yeetDog 👉 ",
             "offline": "/me yeetDog bajlada HAS GONE OFFLINE! yeetDog 👉 "
+        }
+    },
+    "vadikus007": {
+        "id": 72256775,
+        "formats": {
+            "title": "/me PagChomp NEW TITLE! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
+            "game": "/me PagChomp NEW GAME! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
+            "live": "/me PagChomp VADIKUS HAS GONE LIVE! PagChomp FeelsPingedMan 👉 ",
+            "offline": "/me yeetDog bajlada HAS GONE OFFLINE! yeetDog FeelsPingedMan 👉 "
+        },
+        "protection": {
+            "lengthLimit": 250
         }
     },
     "akkirasetsu": {
