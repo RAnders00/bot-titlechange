@@ -12,6 +12,12 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// use in array.filter() to ensure all values are unique
+// https://stackoverflow.com/a/14438954
+function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+}
+
 const knownCommands = [
     events,
     notifyme,
@@ -29,10 +35,13 @@ const knownCommands = [
     titlechange_bot,
     titlechangebot,
     ping,
+    tcbping,
     setData,
     debugData,
     debug,
-    quit];
+    tcbdebug,
+    quit,
+    tcbquit];
 
 // the main data storage object.
 // stores for each channel (key):
@@ -40,32 +49,58 @@ const knownCommands = [
 let currentData = {};
 
 // available events for signing up for pings
-let availableEvents = {
-    "title": {
-        "matcher": function (key, value) {
+const availableEvents = {
+    title: {
+        matcher: function (key, value) {
             return key === "title";
-        }
+        },
+        hasValue: true,
+        description: "when the title changes"
     },
-    "game": {
-        "matcher": function (key, value) {
+    game: {
+        matcher: function (key, value) {
             return key === "game";
         },
+        hasValue: true,
+        description: "when the game changes"
     },
-    "live": {
-        "matcher": function (key, value) {
+    live: {
+        matcher: function (key, value) {
             return key === "live" && value === true;
         },
+        hasValue: false,
+        description: "when the streamer goes live"
     },
-    "offline": {
-        "matcher": function (key, value) {
+    offline: {
+        matcher: function (key, value) {
             return key === "live" && value === false;
-        }
+        },
+        hasValue: false,
+        description: "when the streamer goes offline"
     }
 };
 
-// List of users that want to be pinged for certain events in certain channels
-// "forsen": { "title": ['randers00', 'n_888'], "game": [], "live": ['randers00', 'n_888'] }
-let pingLists = {};
+function getListOfAvailableEvents() {
+    let eventArray = Object.keys(availableEvents);
+    eventArray.sort();
+    return eventArray.join(", ");
+}
+
+// print all events
+async function events(channelName, context, params) {
+    let eventArray = Object.keys(availableEvents);
+    let allEventsString = eventArray.sort()
+        .map(evName => `${evName} (${availableEvents[evName].description})`)
+        .join(', ');
+
+    await sendReply(channelName, context["display-name"], `Available events: ${allEventsString}. ` +
+        'Type "!notifyme <event> [optional value]" to subscribe to an event!');
+}
+
+// requiredValue = null - any value
+// requiredValue = "something" - only when new value contains this
+// [ { channel: "forsen", user: "n_888", event: "title", requiredValue: null } ]
+let userSubscriptions = [];
 
 async function refreshData() {
     for (let [channelName, channelConfig] of Object.entries(config.enabledChannels)) {
@@ -208,13 +243,8 @@ async function runChangeNotify(channelName, key, value) {
     }
     channelLastNotifies[key] = timeNow;
 
-    //
-    // username processing
-    //
     let channelData = config.enabledChannels[channelName];
     let formats = channelData["formats"];
-
-    let channelPingLists = pingLists[channelName] || {};
 
     let protection = channelData["protection"] || {};
     // do we have a char limit (for whole messages)? otherwise use default limit of 400.
@@ -236,10 +266,14 @@ async function runChangeNotify(channelName, key, value) {
         offlineChatOnly = false;
     }
 
+    // this is the channel all notify messages for this event are sent to.
+    // this can be different for offline-only channels that are currently live.
+    let sendChannel = channelName;
+    let eventFormatPrefix = "";
     if (offlineChatOnly && key !== "live" && currentData[channelName]["live"]) {
-        // skip this notify, since channel is online and it was not a live/offline notify.
-        console.log("Skipping notify due to channel being online and offline-only protection being active.");
-        return;
+        sendChannel = config.onlinePrintChannel;
+        eventFormatPrefix = `[via #${channelName}] `;
+        console.log(`Channel #${channelName} is currently live and change occurred, printing notify to #${sendChannel}`);
     }
 
     let noPingMode = protection["noPingMode"];
@@ -256,24 +290,37 @@ async function runChangeNotify(channelName, key, value) {
             continue;
         }
 
+        let usersToPing = userSubscriptions
+            .filter(sub => sub.channel === channelName)
+            .filter(sub => sub.event === eventName)
+            .filter(sub => {
+                if (!eventConfig.hasValue) {
+                    return true;
+                }
+                return String(value).toUpperCase().indexOf(sub.requiredValue.toUpperCase()) >= 0;
+            })
+            .filter(onlyUnique)
+            .map(sub => sub.user);
+
         // get the message format
         let eventFormat = formats[eventName];
         if (key === "live" && !value) {
             eventFormat = formats["offline"];
         }
+        // prepend [via #forsen] if printing to the offline-protection channel
+        eventFormat = eventFormatPrefix + eventFormat;
+        eventFormat = ".me " + eventFormat;
 
         // substitute $VALUE$ with the actual value
         eventFormat = eventFormat.replace(valueRegex, value);
 
         // send this notify WITHOUT any pings, just one message. return immediately.
         if (noPingMode) {
-            sendMessage(channelName, eventFormat);
+            await sendMessage(sendChannel, eventFormat);
             return;
         }
 
-        let userList = channelPingLists[eventName] || [];
-
-        if (userList.length <= 0) {
+        if (usersToPing.length <= 0) {
             // no users signed up for this event, skip
             continue;
         }
@@ -282,13 +329,13 @@ async function runChangeNotify(channelName, key, value) {
         // eventFormat is the message prefix
         let msg = eventFormat;
         let currentMsgUserCount = 0;
-        for (let i = 0; i < userList.length; i++) {
-            let user = userList[i];
+        for (let i = 0; i < usersToPing.length; i++) {
+            let user = usersToPing[i];
 
             let newMessage = msg + user;
             if (newMessage.length > lengthLimit) {
                 // send out the current message and start a new message
-                sendMessage(channelName, msg);
+                await sendMessage(sendChannel, msg);
                 currentMsgUserCount = 0;
                 msg = eventFormat;
             }
@@ -296,160 +343,339 @@ async function runChangeNotify(channelName, key, value) {
             msg += user;
             currentMsgUserCount += 1;
 
-            if ((i + 1) < userList.length) {
+            if ((i + 1) < usersToPing.length) {
                 msg += ", ";
             }
 
         }
 
         if (currentMsgUserCount > 0) {
-            sendMessage(channelName, msg);
+            await sendMessage(sendChannel, msg);
+        }
+
+        if (eventName === "live") {
+            // print the MOTD
+            let channelMotd = channelMotds[channelName];
+            if (channelMotd == null) {
+                channelMotd = defaultMotd;
+            }
+            if (channelMotd != null) {
+                await sendMessage(sendChannel, channelMotd);
+            }
         }
     }
 
 }
 
-async function savePingLists() {
-    await storage.setItem('pingLists', pingLists);
+async function saveUserSubscriptions() {
+    await storage.setItem('userSubscriptions', userSubscriptions);
 }
 
-async function loadPingLists() {
-    let loadedObj = await storage.getItem('pingLists');
+async function loadUserSubscriptions() {
+    let loadedObj = await storage.getItem('userSubscriptions');
     if (typeof loadedObj !== "undefined") {
-        pingLists = loadedObj;
+        userSubscriptions = loadedObj;
     }
 }
 
-// print all events
-async function events(channelName, context, params) {
-    let msg = "Available events: ";
-    let eventArray = Object.keys(availableEvents);
-    eventArray.sort();
-    msg += eventArray.join(", ");
+// the motd is printed after the live notify in a channel as a separate message
+let defaultMotd = "";
+let channelMotds = {};
 
-    await sendReply(channelName, context["display-name"], msg);
+async function saveMotd() {
+    await storage.setItem('defaultMotd', defaultMotd);
+    await storage.setItem('channelMotds', channelMotds);
+}
+
+async function loadMotd() {
+    let loadedDefaultMotd = await storage.getItem('defaultMotd');
+    if (typeof loadedDefaultMotd !== "undefined") {
+        defaultMotd = loadedDefaultMotd;
+    }
+
+    let loadedChannelMotds = await storage.getItem('channelMotds');
+    if (typeof loadedChannelMotds !== "undefined") {
+        channelMotds = loadedChannelMotds;
+    }
+}
+
+// call this as the owner with !tcbdebug importPingLists()
+async function importPingLists() {
+    if (userSubscriptions.length > 0) {
+        return "userSubscriptions array is not empty!";
+    }
+
+    let pingLists = await storage.getItem('pingLists');
+    // format:
+    // "forsen": { "title": ['randers00', 'n_888'], "game": [], "live": ['randers00', 'n_888'] }
+    if (typeof pingLists === "undefined") {
+        return "No pingLists object found in persistent storage";
+    }
+
+    for (let [channelName, channelPingLists] of Object.entries(pingLists)) {
+        for (let [eventName, userList] of Object.entries(channelPingLists)) {
+            for (let username of  userList) {
+                userSubscriptions.push({
+                    channel: channelName,
+                    user: username,
+                    event: eventName,
+                    requiredValue: ""
+                });
+            }
+        }
+    }
+
+    return `Imported ${userSubscriptions.length} subscriptions!`;
 }
 
 async function notifyme(channelName, context, params) {
 
-    if (!(channelName in config.enabledChannels)) {
-        return;
-    }
-
     if (params.length < 1) {
-        await sendReply(channelName, context["display-name"], "Please specify an event to subscribe to. Type !events to get a list of available events.");
+        await sendReply(channelName, context["display-name"], `Please specify an event to subscribe to. ` +
+            `The following events are available: ${getListOfAvailableEvents()}`);
         return;
     }
 
     let eventName = params[0];
+    eventName = eventName.toLowerCase();
 
     if (!(eventName in availableEvents)) {
-        await sendReply(channelName, context["display-name"], "The given event name is not valid. Type !events to get a list of available events.");
+        await sendReply(channelName, context["display-name"], `The given event name is not valid. ` +
+            `The following events are available: ${getListOfAvailableEvents()}`);
         return;
     }
 
-    let thisChannelPingLists = pingLists[channelName];
-    if (typeof thisChannelPingLists === "undefined") {
-        thisChannelPingLists = {};
-        pingLists[channelName] = thisChannelPingLists;
+    let requiredValue = params.slice(1).join(" ");
+
+    let eventConfig = availableEvents[eventName];
+
+    if (!eventConfig.hasValue && requiredValue.length > 0) {
+        // requesting specific value when this is not an event that takes on a value. (e.g. live/offline)
+        requiredValue = "";
     }
 
-    let userList = thisChannelPingLists[eventName];
-    if (typeof userList === "undefined") {
-        userList = [];
-        thisChannelPingLists[eventName] = userList;
-    }
-
-    let username = context["username"];
-    if (userList.includes(username)) {
-        await sendReply(channelName, context["display-name"], `You are already subscribed to the event "${eventName}". Type "!removeme ${eventName}" to unsubscribe. You can view all your subscriptions with "!subscribed".`);
+    // check if requesting generic sub, and user has specific subs
+    let specificSubs = userSubscriptions
+        .filter(sub => sub.channel === channelName)
+        .filter(sub => sub.user === context["username"])
+        .filter(sub => sub.event === eventName)
+        .filter(sub => sub.requiredValue.length > 0);
+    if (requiredValue.length <= 0 && specificSubs.length > 0) {
+        // user is requesting generic sub when they have specific ones on record.
+        // remove all their subs and replace them with one generic one.
+        userSubscriptions = userSubscriptions
+            .filter(sub => sub.channel === channelName)
+            .filter(sub => sub.user === context["username"])
+            .filter(sub => sub.event === eventName);
+        userSubscriptions.push({
+            channel: channelName,
+            user: context["username"],
+            event: eventName,
+            requiredValue: requiredValue
+        });
+        await sendReply(channelName, context["display-name"], `Successfully subscribed you to the event ` +
+            `"${eventName}". You previously had subscriptions for this event that were set to only match specific values. ` +
+            `These subscriptions have been removed and you will now be notified regardless of the value. SeemsGood`);
         return;
     }
 
-    userList.push(username);
 
-    await savePingLists();
+    // check if a general subscription or this exact sub already exists
+    let duplicateSubs = userSubscriptions
+        .filter(sub => sub.channel === channelName)
+        .filter(sub => sub.user === context["username"])
+        .filter(sub => sub.event === eventName)
+        .filter(sub => sub.requiredValue.length <= 0 || sub.requiredValue.toUpperCase() === requiredValue.toUpperCase());
 
-    await sendReply(channelName, context["display-name"], `Successfully subscribed you to the event "${eventName}". You will now be pinged in chat when this event occurs.`);
+    if (duplicateSubs.length > 0) {
+        if (duplicateSubs.length > 2) {
+            // this shouldnt (tm) happen because it would mean the user has a general match-all subscription
+            // (requiredValue="") and a specific one. This method aims to prevent that.
+            console.warn(`User has two duplicates for eventName=${eventName} with requiredValue=${requiredValue}, ` +
+                `found these duplicates: ${JSON.stringify(duplicateSubs)}`);
+        }
+
+        // following combinations are possible:
+        // inputRequiredValue="" duplicateRequiredValue="" (duplicate generic sub)
+        // inputRequiredValue="something" duplicateRequiredValue="" (specific sub when generic one exists)
+        // this is not possible: inputRequiredValue="" duplicateRequiredValue="something" (handled previously)
+        // inputRequiredValue="something" duplicateRequiredValue="something" (duplicate specific sub)
+
+        let duplicateSub = duplicateSubs[0];
+        if (duplicateSub.requiredValue.length <= 0) {
+            // user is trying to add either duplicate generic subscription, or a specific one when they have a generic one.
+            if (requiredValue.length > 0) {
+                await sendReply(channelName, context["display-name"], `You already have a subscription for the ` +
+                    `event "${eventName}" that matches *all* values. Should you want to only get pinged on specific values, ` +
+                    `type "!removeme ${eventName}" and run this command again.`);
+            } else {
+                await sendReply(channelName, context["display-name"], `You already have a subscription for the ` +
+                    `event "${eventName}". If you want to unsubscribe, type "!removeme ${eventName}".`);
+            }
+            return;
+        } else {
+            // user is trying to add specific subscription, and already has this exact specific subscription.
+            await sendReply(channelName, context["display-name"], `You already have a subscription for the event ` +
+                `"${eventName}" with the value "${requiredValue}".`);
+            return;
+        }
+    }
+
+
+    // by now: user does not have a duplicating subscription on record
+    // (or a generic one when requesting a specific one)
+    // we can add this subscription now without issue.
+
+    userSubscriptions.push({
+        channel: channelName,
+        user: context["username"],
+        event: eventName,
+        requiredValue: requiredValue
+    });
+    await saveUserSubscriptions();
+    if (requiredValue.length <= 0) {
+        // new generic sub
+        await sendReply(channelName, context["display-name"],
+            `I will now ping you in chat when ${eventConfig.description}!`);
+    } else {
+        // new specific sub
+        await sendReply(channelName, context["display-name"],
+            `I will now ping you in chat when ${eventConfig.description}, but only when the value contains `
+            + `"${requiredValue}"!`);
+    }
 
 }
 
 async function removeme(channelName, context, params) {
 
-    if (!(channelName in config.enabledChannels)) {
-        await sendReply(channelName, context["display-name"], "Error: This channel is not enabled.");
-        return;
-    }
-
     if (params.length < 1) {
-        await sendReply(channelName, context["display-name"], "Please specify an event to unsubscribe from. Type !events to get a list of available events.");
+        await sendReply(channelName, context["display-name"], `Please specify an event to unsubscribe from. ` +
+            `The following events are available: ${getListOfAvailableEvents()}`);
         return;
     }
 
     let eventName = params[0];
+    eventName = eventName.toLowerCase();
 
     if (!(eventName in availableEvents)) {
-        await sendReply(channelName, context["display-name"], "The given event name is not valid. Type !events to get a list of available events.");
+        await sendReply(channelName, context["display-name"], `The given event name is not valid. ` +
+            `The following events are available: ${getListOfAvailableEvents()}. You can view all your subscriptions `);
         return;
     }
 
-    let thisChannelPingLists = pingLists[channelName];
-    if (typeof thisChannelPingLists === "undefined") {
-        thisChannelPingLists = {};
-        pingLists[channelName] = thisChannelPingLists;
+    let requiredValue = params.slice(1).join(" ");
+
+    let eventConfig = availableEvents[eventName];
+
+    if (!eventConfig.hasValue && requiredValue.length > 0) {
+        // requesting specific value when this is not an event that takes on a value. (e.g. live/offline)
+        requiredValue = "";
     }
 
-    let userList = thisChannelPingLists[eventName];
-    if (typeof userList === "undefined") {
-        userList = [];
-        thisChannelPingLists[eventName] = userList;
-    }
+    // if requiredValue is empty, remove the user from all subscriptions to this event.
+    // if requiredValue is non-empty, only remove the subscription that matches that value.
 
-    let username = context["username"];
-    if (!(userList.includes(username))) {
-        await sendReply(channelName, context["display-name"], `You are not subscribed to the event "${eventName}". Type "!notifyme ${eventName}" to subscribe.  You can view all your subscriptions with "!subscribed".`);
+    let toRemove = userSubscriptions
+        .filter(sub => sub.channel === channelName)
+        .filter(sub => sub.user === context["username"])
+        .filter(sub => sub.event === eventName)
+        .filter(sub => {
+            if (requiredValue.length <= 0) {
+                // no value passed to the function, match all
+                return true;
+            }
+
+            // value passed, match only on case-insensitive match
+            return requiredValue.toUpperCase() === sub.requiredValue.toUpperCase();
+        });
+
+    if (toRemove.length < 1) {
+        if (requiredValue.length <= 0) {
+            // user was not subbed to this event at all
+            await sendReply(channelName, context["display-name"],
+                `You are not subscribed to the event "${eventName}". You can view all your ` +
+                `subscriptions with "!subscribed".`);
+        } else {
+            // did not match that requiredValue
+            await sendReply(channelName, context["display-name"],
+                `You are not subscribed to the event "${eventName}" with the value "${requiredValue}" o_O ` +
+                `You can view all your subscriptions with "!subscribed".`);
+        }
         return;
     }
 
-    thisChannelPingLists[eventName] = userList.filter(function (e) {
-        return e !== username;
-    });
+    userSubscriptions = userSubscriptions.filter(sub => !toRemove.includes(sub));
 
-    await savePingLists();
+    await saveUserSubscriptions();
 
-    await sendReply(channelName, context["display-name"], `Successfully unsubscribed you from the event "${eventName}".`);
-
+    await sendReply(channelName, context["display-name"],
+        `Successfully unsubscribed you from the event "${eventName}" ` +
+        `${requiredValue.length > 0 ? `for the value "${requiredValue}" ` : ''}` +
+        `(removed ${toRemove.length} ` +
+        `subscription${toRemove.length === 1 ? '' : 's'})`);
 }
+
 
 async function subscribed(channelName, context, params) {
 
-    if (!(channelName in config.enabledChannels)) {
-        await sendReply(channelName, context["display-name"], "Error: This channel is not enabled.");
+    let activeSubscriptions = userSubscriptions
+        .filter(sub => sub.channel === channelName)
+        .filter(sub => sub.user === context["username"]);
+
+    let eventNames = activeSubscriptions
+        .map(sub => sub.event)
+        .filter(onlyUnique);
+
+    let msgParts = [];
+    for (let eventName of eventNames) {
+        let eventConfig = availableEvents[eventName];
+        let eventSubscriptions = activeSubscriptions
+            .filter(sub => sub.event === eventName);
+
+        if (!eventConfig.hasValue) {
+            // the user has a subscription for this event, but this is a event type
+            // without a value so only possible situation is that the user has exactly one generic sub to this event.
+            msgParts.push(
+                `${eventName} (${eventConfig.description})`
+            );
+            continue;
+        }
+
+        // this is an event that has a value (game/title for example), and the user has at least 1 sub to this event.
+        if (eventSubscriptions.length === 1 && eventSubscriptions[0].requiredValue.length <= 0) {
+            // generic sub
+            msgParts.push(
+                `${eventName} (${eventConfig.description})`
+            );
+            continue;
+        }
+
+        // user has 1 or more specific subs
+        let requiredValues = [];
+        for (let sub of eventSubscriptions) {
+            requiredValues.push(
+                `"${sub.requiredValue}"`
+            );
+        }
+
+        msgParts.push(
+            `${eventName} (${eventConfig.description}) for the values ${requiredValues.join(', ')}`
+        );
+    }
+
+    if (msgParts.length < 1) {
+        await sendReply(channelName, context["display-name"],
+            "You are not subscribed to any events. Use !notifyme <event> [optional value] to subscribe. " +
+
+            `Valid events are: ${getListOfAvailableEvents()}`
+        );
         return;
     }
 
-    let username = context["username"];
+    await sendReply(channelName, context["display-name"],
 
-
-    let events = [];
-    for (let [eventName, userList] of Object.entries(pingLists[channelName] || {})) {
-        if (userList.includes(username)) {
-            events.push("\"" + eventName + "\"");
-        }
-    }
-
-    let msg;
-    if (events.length >= 1) {
-        msg = "You are subscribed to the following events: ";
-        msg += events.join(", ");
-        msg += ".";
-    } else {
-        msg = "You are not subscribed to any events. Use !notifyme to subscribe.";
-    }
-
-    msg += " You can view all events with \"!events\".";
-
-    await sendReply(channelName, context["display-name"], msg);
+        `Your subscriptions in this channel: ${msgParts.join(', ')}`
+    );
 }
 
 async function title(channelName, context, params) {
@@ -459,7 +685,9 @@ async function title(channelName, context, params) {
         return;
     }
 
-    await sendReply(channelName, context["display-name"], `Current title: ${currentData[channelName]["title"]}`);
+    await sendReply(channelName, context["display-name"],
+        `Current title: ${currentData[channelName]["title"]}`
+    );
 
 }
 
@@ -470,7 +698,9 @@ async function game(channelName, context, params) {
         return;
     }
 
-    await sendReply(channelName, context["display-name"], `Current game: ${currentData[channelName]["game"]}`);
+    await sendReply(channelName, context["display-name"],
+        `Current game: ${currentData[channelName]["game"]}`
+    );
 
 }
 
@@ -481,7 +711,9 @@ async function islive(channelName, context, params) {
         return;
     }
 
-    await sendReply(channelName, context["display-name"], `Current live status: ${currentData[channelName]["live"] ? "The channel is live!" : "The channel is offline :("}`);
+    await sendReply(channelName, context["display-name"],
+        `Current live status: ${currentData[channelName]["live"] ? "The channel is live!" : "The channel is offline :("}`
+    );
 
 }
 
@@ -492,7 +724,8 @@ async function help(channelName, context, params) {
         return;
     }
 
-    await sendReply(channelName, context["display-name"], "Available commands: !notifyme [event], !removeme [event], !subscribed, !events, !title, !game, !islive, !help");
+    await sendReply(channelName, context["display-name"], "Available commands: !notifyme <event> [optional value], "+
+        "!removeme <event> [optional value], !subscribed, !events, !title, !game, !islive, !help");
 }
 
 async function titlechangebot_help(channelName, context, params) {
@@ -533,6 +766,10 @@ async function ping(channelName, context, params) {
     await sendReply(channelName, context["display-name"], "Reporting for duty NaM 7");
 }
 
+async function tcbping(channelName, context, params) {
+    await ping(channelName, context, params);
+}
+
 async function setData(channelName, context, params) {
 
     if (!config.administrators.includes(context["username"])) {
@@ -553,13 +790,15 @@ function debugData(channelName, context, params) {
         return;
     }
 
-    console.log(`triggered debug print from ${JSON.stringify(channelName)}`);
+    console.log(
+        `triggered debug print from ${JSON.stringify(channelName)}`
+    );
     console.log("=== enabledChannels ===");
     console.log(config.enabledChannels);
     console.log("=== currentData ===");
     console.log(currentData);
-    console.log("=== pingLists ===");
-    console.log(pingLists);
+    console.log("=== userSubscriptions ===");
+    console.log(userSubscriptions);
 
 }
 
@@ -573,7 +812,7 @@ async function debug(channelName, context, params) {
         let result = eval(params.join(" "));
 
         // await if result is promise
-        if (typeof result === 'object' && typeof result.then === 'function') {
+        if (result !== null && typeof result === 'object' && typeof result.then === 'function') {
             result = await result;
         }
 
@@ -581,8 +820,14 @@ async function debug(channelName, context, params) {
         console.log(result);
     } catch (e) {
         console.log(e);
-        await sendReply(channelName, context["display-name"], `Error thrown: ${String(e)}`);
+        await sendReply(channelName, context["display-name"],
+            `Error thrown: ${String(e)}`
+        );
     }
+}
+
+async function tcbdebug(channelName, context, params) {
+    await debug(channelName, context, params);
 }
 
 async function quit(channelName, context, params) {
@@ -596,17 +841,36 @@ async function quit(channelName, context, params) {
 
 }
 
+async function tcbquit(channelName, context, params) {
+    await quit(channelName, context, params);
+}
+
 // validates that the given input message is not banned in the given channel. If it is banned,
 // the method will recursively replace all banphrases with "***" until the message is no longer
 // banned.
 async function censorBanphrases(channelName, message) {
-    let channelProtectionData = config.enabledChannels[channelName]["protection"];
+    let channelConfig = config.enabledChannels[channelName];
+    if (typeof channelConfig === "undefined") {
+        // no info about this channel
+        console.log(
+            `banphrase check skipped for >${message}< in ch ${channelName} (channel not configured)`
+        );
+        return message;
+    }
+
+    let channelProtectionData = channelConfig["protection"];
 
     if (channelProtectionData == null || channelProtectionData["endpoint"] == null) {
         // banphrase protection not enabled in that channel
-        console.log(`banphrase check skipped for >${message}< in ch ${channelName}`);
+        console.log(
+            `banphrase check skipped for >${message}< in ch ${channelName} (channel not protected)`
+        );
         return message;
     }
+
+    console.log(
+        `beginning banphrase check for >${message}< in ch ${channelName}`
+    );
 
     let banned = true;
     do {
@@ -627,12 +891,52 @@ async function censorBanphrases(channelName, message) {
             // which is why this API call may be executed multiple times
             // if needed.
             if (banned) {
-                let phrase = response["banphrase_data"]["phrase"];
+                let banphraseData = response["banphrase_data"];
 
-                let regexEscapedBanphrase = escapeStringRegexp(phrase);
-                let phraseRegex = new RegExp(regexEscapedBanphrase, "gi");
+                let phrase = banphraseData["phrase"];
+                let caseSensitive = banphraseData["case_sensitive"];
+                // https://github.com/pajlada/pajbot/blob/c90b7ebf19776919f1b06eb2d0e4a7e7b57d9c27/pajbot/web/routes/admin/banphrases.py#L68
+                // ['contains', 'startswith', 'endswith', 'exact', 'regex']
+                let operator = banphraseData["operator"];
+                let name = banphraseData["name"];
+                let id = banphraseData["id"];
+                let permanent = banphraseData["permanent"];
 
-                message = message.replace(phraseRegex, "***");
+                let regex;
+                if (operator === "regex") {
+                    regex = phrase;
+                } else {
+                    // contains, startswith, endswith or exact
+                    regex = escapeStringRegexp(phrase);
+                    if (operator === "startswith" || operator === "exact") {
+                        regex =
+                            `^${regex}`
+                        ;
+                    }
+                    if (operator === "endswith" || operator === "exact") {
+                        regex =
+                            `${regex}$`
+                        ;
+                    }
+                }
+                let flags = "g";
+                if (!caseSensitive) {
+                    flags += "i";
+                }
+
+                console.log(
+                    `Built regex: >${regex}< flags >${flags}<`
+                );
+                let phraseRegex = new RegExp(regex, flags);
+                let censoredMessage = message.replace(phraseRegex, "***");
+                if (censoredMessage === message) {
+                    console.error("Was unable to modify the string with the built regex at all. Returning error message");
+                    return "error while trying to censor banphrases monkaOMEGA @RAnders00";
+                }
+                message = censoredMessage;
+                console.log(
+                    `Censored banphrase ${id} (name: ${name}) (op: ${operator}) (perm: ${permanent}) (caseSensitive: ${caseSensitive}} >${phrase}<`
+                );
             }
 
         } catch (error) {
@@ -643,13 +947,17 @@ async function censorBanphrases(channelName, message) {
         }
     } while (banned);
 
-    console.log(`banphrase check completed for >${message}< in ch ${channelName}`);
+    console.log(
+        `banphrase check completed for >${message}< in ch ${channelName}`
+    );
     return message;
 
 }
 
 async function sendReply(channelName, username, message) {
-    await sendMessage(channelName, `@${username}, ${message}`);
+    await sendMessage(channelName,
+        `@${username}, ${message}`
+    );
 }
 
 let lastEgressMessages = [];
@@ -658,7 +966,20 @@ let egressMessageTimers = [];
 
 async function sendMessage(channelName, message) {
     message = await censorBanphrases(channelName, message);
-    await sendMessageUnsafe(channelName, message);
+
+    // crop to length limit in this channel, if protected and length limit exists
+    let channelConfig = config.enabledChannels[channelName] || {};
+    let protectionConfig = channelConfig["protection"] || {};
+    let lengthLimit = protectionConfig["lengthLimit"] || 400;
+    // leave a space of 2 characters should the sender function decide to add the alternate message
+    // invisible character at the end.
+    lengthLimit -= 2;
+    let trimmedMessage = message.substring(0, lengthLimit);
+    if (trimmedMessage.length < message.length) {
+        trimmedMessage = message.substring(0, lengthLimit - 1) + "…";
+    }
+
+    await sendMessageUnsafe(channelName, trimmedMessage);
 }
 
 async function sendMessageUnsafe(channelName, message) {
@@ -673,34 +994,54 @@ async function sendMessageUnsafe(channelName, message) {
     // lock for this channel
     // lock.enter does not take async functions. wrap the whole call inside yet
     // another async function and execute immediately.
-    lock.enter((token) => {
-        console.log(`locked ${channelName}`);
-        (async () => {
-            let lastEgressMessage = lastEgressMessages[channelName];
+    await new Promise(resolve => {
+        lock.enter((token) => {
+            console.log(
+                `locked ${channelName}`
+            );
+            (async () => {
+                let lastEgressMessage = lastEgressMessages[channelName];
 
-            if (lastEgressMessage === message) {
-                message += ' \u206D';
-            }
-            console.log(`EGRESS [to: ${channelName}] >${message}<`);
-            await client.say("#" + channelName, message);
-            lastEgressMessages[channelName] = message;
+                if (lastEgressMessage === message) {
+                    message += ' \u206D';
+                }
+                console.log(
+                    `EGRESS [to: ${channelName}] >${message}<`
+                );
+                await client.say("#" + channelName, message);
+                lastEgressMessages[channelName] = message;
 
-            // sleep (lock this channel) for 1650 ms (1200ms is minimum, but 1650 prevents us exceeding global limits)
-            // use a extendable timer in case we get timed out (then wait longer until lock release)
-            // see the onTimeoutHandler for more details
-            await new Promise(resolve => {
-                let timer = new Timer(1650, 1650, () => {
-                    delete egressMessageTimers[channelName];
+                if (config.modChannels.includes(channelName)) {
+                    // don't sleep!
+                    console.log(
+                        `immediately unlocking ${channelName} again`
+                    );
+                    token.leave();
                     resolve();
-                });
-                egressMessageTimers[channelName] = timer;
-            });
+                    return;
+                }
 
-            console.log(`unlocking ${channelName}`);
-            // unlock for this channel
-            token.leave();
-        })();
+                // sleep (lock this channel) for 1650 ms (1200ms is minimum, but 1650 prevents us exceeding global limits)
+                // use a extendable timer in case we get timed out (then wait longer until lock release)
+                // see the onTimeoutHandler for more details
+                await new Promise(timerResolve => {
+                    let timer = new Timer(1650, 1650, () => {
+                        delete egressMessageTimers[channelName];
+                        timerResolve();
+                    });
+                    egressMessageTimers[channelName] = timer;
+                });
+
+                console.log(
+                    `unlocking ${channelName}`
+                );
+                // unlock for this channel
+                token.leave();
+                resolve();
+            })();
+        });
     });
+
 }
 
 // Create a client with our options:
@@ -716,7 +1057,8 @@ async function connect() {
     console.log("Initializing storage...");
     await storage.init();
     console.log("Loading from storage...");
-    await loadPingLists();
+    await loadUserSubscriptions();
+    await loadMotd();
     console.log("Connecting to Twitch IRC...");
     await client.connect();
 
@@ -761,22 +1103,23 @@ function onMessageHandler(target, context, msg, self) {
     const params = parse.splice(1);
 
 
-    let channelConfig = config.enabledChannels[target];
-    if (channelConfig == null) {
-        return;
-    }
+    let channelConfig = config.enabledChannels[target] || {};
     let disabledCommands = (channelConfig.protection || {}).disabledCommands || [];
 
     for (let i = 0; i < knownCommands.length; i++) {
         if (knownCommands[i].name.toUpperCase() === commandName.toUpperCase()) {
             // is the command disabled?
             if (disabledCommands.includes(commandName.toLowerCase())) {
-                console.log(`Not executing ${commandName} for ${context.username} because command is disabled in ${target}`);
+                console.log(
+                    `* Not executing ${commandName} for ${context.username} because command is disabled in ${target}`
+                );
                 continue;
             }
 
             knownCommands[i](target, context, params);
-            console.log(`* Executed ${commandName} command for ${context.username}`);
+            console.log(
+                `* Executed ${commandName} command for ${context.username}`
+            );
         }
     }
 }
@@ -801,7 +1144,9 @@ function onTimeoutHandler(channelName, username, reason, duration) {
 
         // create a timer and lock
         lock.enter((token) => {
-            console.log(`locked ${channelName} via timeout handler`);
+            console.log(
+                `locked ${channelName} via timeout handler`
+            );
             (async () => {
                 await new Promise(resolve => {
                     timer = new Timer(duration * 1000, 0, () => {
@@ -811,7 +1156,9 @@ function onTimeoutHandler(channelName, username, reason, duration) {
                     egressMessageTimers[channelName] = timer;
                 });
 
-                console.log(`unlocking ${channelName} from timeout handler`);
+                console.log(
+                    `unlocking ${channelName} from timeout handler`
+                );
                 // unlock for this channel
                 token.leave();
             })();
@@ -826,11 +1173,15 @@ function onTimeoutHandler(channelName, username, reason, duration) {
 }
 
 function onConnectedHandler(addr, port) {
-    console.log(`* Connected to ${addr}:${port}`);
+    console.log(
+        `* Connected to ${addr}:${port}`
+    );
 }
 
 function onDisconnectedHandler(reason) {
-    console.log(`Disconnected: ${reason}`);
+    console.log(
+        `Disconnected: ${reason}`
+    );
     process.exit(1);
 }
 

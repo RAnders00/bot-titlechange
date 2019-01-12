@@ -22,5 +22,6 @@
     "node-persist": "^3.0.1",
     "request-promise": "^4.2.2",
     "tmi.js": "^1.2.1"
-  }
+  },
+  "devDependencies": {}
 }

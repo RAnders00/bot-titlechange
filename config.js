@@ -3,11 +3,15 @@
 const secrets = require('./secrets');
 
 const opts = {
+    connection: {
+        secure: true
+    },
     identity: {
         username: 'titlechange_bot',
         password: secrets.ircPassword
     },
     channels: [
+        '#titlechange_bot',
         '#randers00',
         '#forsen',
         '#akkirasetsu',
@@ -35,6 +39,17 @@ let administrators = [
 // The bot will post a "I am running"-style message to this channel on startup.
 const startupChannel = 'randers00';
 
+// if a channel is offline-only protected, and a change occurs, the bot prints
+// to this channel instead of the channel the change occurred in.
+const onlinePrintChannel = 'titlechange_bot';
+
+// list of channel names where the bot is not limited to the global 1.2 second
+// slowmode (channels it is broadcaster, moderator or VIP in)
+const modChannels = [
+    'titlechange_bot',
+    'randers00'
+];
+
 // tip: use !userid <usernames...> command in the #pajlada chat to get user IDs
 // add the "protection" object to enable pajbot banphrase checking protection
 // add lengthLimit and/or valueLengthLimit to set message length limits and length limits
@@ -46,10 +61,10 @@ let enabledChannels = {
     "randers00": {
         "id": 40286300,
         "formats": {
-            "title": "/me PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
-            "game": "/me PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-            "live": "/me ppHop randers00 is live ppHop 👉 ",
-            "offline": "/me MistyHisty randers00 has gone offline MistyHisty 👉 "
+            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "ppHop randers00 is live ppHop 👉 ",
+            "offline": "MistyHisty randers00 has gone offline MistyHisty 👉 "
         }, "protection": {
             "valueLengthLimit": 80
         }
@@ -57,23 +72,26 @@ let enabledChannels = {
     "forsen": {
         "id": 22484632,
         "formats": {
-            "title": "/me PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
-            "game": "/me PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-            "live": "/me KKool GuitarTime FORSEN HAS GONE LIVE! KKool GuitarTime 👉 ",
-            "offline": "/me FeelsGoodMan Clap FORSEN HAS GONE OFFLINE! FeelsGoodMan Clap 👉 "
+            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "KKool GuitarTime FORSEN HAS GONE LIVE! KKool GuitarTime 👉 ",
+            "offline": "FeelsGoodMan Clap FORSEN HAS GONE OFFLINE! FeelsGoodMan Clap 👉 "
         },
         "protection": {
             "endpoint": "https://forsen.tv/api/v1/banphrases/test",
-            "offlineOnly": true
+            "offlineOnly": true,
+            "disabledCommands": [
+                "debug"
+            ]
         }
     },
     "pajlada": {
         "id": 11148817,
         "formats": {
-            "title": "/me PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
-            "game": "/me PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-            "live": "/me PagChomp 👉 pajlada has gone live pajaH 👉 ",
-            "offline": "/me pajaSad pajlada has gone offline pajaSad 👉 "
+            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "PagChomp 👉 pajlada has gone live pajaH 👉 ",
+            "offline": "pajaSad pajlada has gone offline pajaSad 👉 "
         },
         "protection": {
             "endpoint": "https://paj.pajlada.se/api/v1/banphrases/test",
@@ -82,35 +100,36 @@ let enabledChannels = {
                 "ping",
                 "help",
 				"game",
-				"title"
+				"title",
+                "debug"
             ]
         }
     },
     "supinic": {
         "id": 31400525,
         "formats": {
-            "title": "/me PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
-            "game": "/me PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-            "live": "/me ppHop supinic has gone live ppHop 👉 ",
-            "offline": "/me FeelsBadMan supinic has gone offline FeelsBadMan 👉 "
+            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "ppHop supinic has gone live ppHop 👉 ",
+            "offline": "FeelsBadMan supinic has gone offline FeelsBadMan 👉 "
         },
     },
     "zflare3": {
         "id": 143339442,
         "formats": {
-            "title": "/me Bestboy NEW TITLE! Bestboy 👉 $VALUE$ 👉 ",
-            "game": "/me Bestboy NEW GAME! Bestboy 👉 $VALUE$ 👉 ",
-            "live": "/me Bestboy Zflare3 has gone live Bestboy 👉 ",
-            "offline": "/me FeelsBadMan Zflare3 has gone offline FeelsBadMan 👉 "
+            "title": "Bestboy NEW TITLE! Bestboy 👉 $VALUE$ 👉 ",
+            "game": "Bestboy NEW GAME! Bestboy 👉 $VALUE$ 👉 ",
+            "live": "Bestboy Zflare3 has gone live Bestboy 👉 ",
+            "offline": "FeelsBadMan Zflare3 has gone offline FeelsBadMan 👉 "
         },
     },
     "nymn": {
         "id": 62300805,
         "formats": {
-            "title": "/me peepoPog NEW TITLE! peepoPog 👉 $VALUE$ 👉 ",
-            "game": "/me peepoPog NEW GAME! peepoPog 👉 $VALUE$ 👉 ",
-            "live": "/me peepoPog NYMN HAS GONE LIVE! peepoPog 👉 ",
-            "offline": "/me FeelsBadMan NYMN HAS GONE OFFLINE! FeelsBadMan 👉 "
+            "title": "peepoPog NEW TITLE! peepoPog 👉 $VALUE$ 👉 ",
+            "game": "peepoPog NEW GAME! peepoPog 👉 $VALUE$ 👉 ",
+            "live": "peepoPog NYMN HAS GONE LIVE! peepoPog 👉 ",
+            "offline": "FeelsBadMan NYMN HAS GONE OFFLINE! FeelsBadMan 👉 "
         },
         "protection": {
             "endpoint": "https://nymn.pajbot.com/api/v1/banphrases/test",
@@ -124,19 +143,19 @@ let enabledChannels = {
     "bajlada": {
         "id": 159849156,
         "formats": {
-            "title": "/me yeetDog NEW TITLE! yeetDog 👉 $VALUE$ 👉 ",
-            "game": "/me yeetDog NEW GAME! yeetDog 👉 $VALUE$ 👉 ",
-            "live": "/me yeetDog bajlada HAS GONE LIVE! yeetDog 👉 ",
-            "offline": "/me yeetDog bajlada HAS GONE OFFLINE! yeetDog 👉 "
+            "title": "yeetDog NEW TITLE! yeetDog 👉 $VALUE$ 👉 ",
+            "game": "yeetDog NEW GAME! yeetDog 👉 $VALUE$ 👉 ",
+            "live": "yeetDog bajlada HAS GONE LIVE! yeetDog 👉 ",
+            "offline": "yeetDog bajlada HAS GONE OFFLINE! yeetDog 👉 "
         }
     },
     "vadikus007": {
         "id": 72256775,
         "formats": {
-            "title": "/me PagChomp NEW TITLE! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
-            "game": "/me PagChomp NEW GAME! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
-            "live": "/me PagChomp VADIKUS HAS GONE LIVE! PagChomp FeelsPingedMan 👉 ",
-            "offline": "/me yeetDog bajlada HAS GONE OFFLINE! yeetDog FeelsPingedMan 👉 "
+            "title": "PagChomp NEW TITLE! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
+            "live": "PagChomp VADIKUS HAS GONE LIVE! PagChomp FeelsPingedMan 👉 ",
+            "offline": "yeetDog bajlada HAS GONE OFFLINE! yeetDog FeelsPingedMan 👉 "
         },
         "protection": {
             "lengthLimit": 250
@@ -145,10 +164,10 @@ let enabledChannels = {
     "akkirasetsu": {
         "id": 117423271,
         "formats": {
-            "title": "/me RoWOW NEW TITLE! RoWOW 👉 $VALUE$ 👉 ",
-            "game": "/me RoWOW NEW GAME! RoWOW 👉 $VALUE$ 👉 ",
-            "live": "/me RoWOW 👉 AkkiRasetsu has gone live POI 👉 ",
-            "offline": "/me FeelsAkariMan AkkiRasetsu has gone offline FeelsAkariMan  👉 "
+            "title": "RoWOW NEW TITLE! RoWOW 👉 $VALUE$ 👉 ",
+            "game": "RoWOW NEW GAME! RoWOW 👉 $VALUE$ 👉 ",
+            "live": "RoWOW 👉 AkkiRasetsu has gone live POI 👉 ",
+            "offline": "FeelsAkariMan AkkiRasetsu has gone offline FeelsAkariMan  👉 "
         },
     }/**/
 };
@@ -159,5 +178,7 @@ module.exports = {
     "krakenClientId": krakenClientId,
     "administrators": administrators,
     "startupChannel": startupChannel,
+    "onlinePrintChannel": onlinePrintChannel,
+    "modChannels": modChannels,
     "enabledChannels": enabledChannels
 };
