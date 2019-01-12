@@ -249,6 +249,8 @@ async function runChangeNotify(channelName, key, value) {
     let protection = channelData["protection"] || {};
     // do we have a char limit (for whole messages)? otherwise use default limit of 400.
     let lengthLimit = protection["lengthLimit"] || 400;
+    // leave two characters for chatterino alternate character (this is added in the sendMessageUnsafe function later)
+    lengthLimit -= 2;
 
     // do we have a value length limit? (e.g. length limit for the title/game/etc. field)?
     // If not use 1/4 of the length limit.
@@ -258,7 +260,7 @@ async function runChangeNotify(channelName, key, value) {
     if (value.length > valueLengthLimit) {
         // shorten value to length - 1, to leave one char space for the ellipsis character
         value = value.substring(0, valueLengthLimit - 1);
-        value += "\u2026";
+        value += "…";
     }
 
     let offlineChatOnly = protection["offlineOnly"];
@@ -320,37 +322,45 @@ async function runChangeNotify(channelName, key, value) {
             return;
         }
 
-        if (usersToPing.length <= 0) {
-            // no users signed up for this event, skip
-            continue;
-        }
+//        if (usersToPing.length <= 0) {
+//            // no users signed up for this event, skip
+//            continue;
+//        }
 
-        // join into individual messages, each up to 400 characters long.
-        // eventFormat is the message prefix
-        let msg = eventFormat;
-        let currentMsgUserCount = 0;
-        for (let i = 0; i < usersToPing.length; i++) {
-            let user = usersToPing[i];
 
-            let newMessage = msg + user;
-            if (newMessage.length > lengthLimit) {
-                // send out the current message and start a new message
-                await sendMessage(sendChannel, msg);
-                currentMsgUserCount = 0;
-                msg = eventFormat;
+        let buildNotifyMsg = function (usersArray) {
+            let msg = eventFormat;
+            msg += usersArray.join(', ');
+            msg = msg.trim();
+            return msg;
+        };
+        // join into individual messages, each up to >lengthLimit< characters long.
+        // eventFormat is the message prefix.
+        let messagesToPrint = [];
+
+        let currentStartIndex = 0;
+        // start with one user.
+        for (let i = 1; i <= usersToPing.length; i++) {
+            let thisIterationUsers = usersToPing.slice(currentStartIndex, i);
+            // note that this will technically be out of bounds for the last iteration,
+            // but JS accepts the too-big end index and just returns the same array as
+            // thisIterationUsers.
+            let nextIterationUsers = usersToPing.slice(currentStartIndex, i + 1);
+
+            // build message for this iteration
+            let thisIterationMessage = buildNotifyMsg(thisIterationUsers);
+            let nextIterationMessage = buildNotifyMsg(nextIterationUsers);
+
+            if (nextIterationMessage.length > lengthLimit) {
+                messagesToPrint.push(thisIterationMessage);
+                // begin again with one user.
+                currentStartIndex = i;
             }
 
-            msg += user;
-            currentMsgUserCount += 1;
-
-            if ((i + 1) < usersToPing.length) {
-                msg += ", ";
+            // if last iteration.
+            if (thisIterationUsers.length === nextIterationUsers.length) {
+                messagesToPrint.push(thisIterationMessage);
             }
-
-        }
-
-        if (currentMsgUserCount > 0) {
-            await sendMessage(sendChannel, msg);
         }
 
         if (eventName === "live") {
@@ -360,8 +370,12 @@ async function runChangeNotify(channelName, key, value) {
                 channelMotd = defaultMotd;
             }
             if (channelMotd != null) {
-                await sendMessage(sendChannel, channelMotd);
+                messagesToPrint.push(channelMotd);
             }
+        }
+
+        for (let msgToPrint of messagesToPrint) {
+            await sendMessage(channelName, msgToPrint);
         }
     }
 
@@ -724,7 +738,7 @@ async function help(channelName, context, params) {
         return;
     }
 
-    await sendReply(channelName, context["display-name"], "Available commands: !notifyme <event> [optional value], "+
+    await sendReply(channelName, context["display-name"], "Available commands: !notifyme <event> [optional value], " +
         "!removeme <event> [optional value], !subscribed, !events, !title, !game, !islive, !help");
 }
 
