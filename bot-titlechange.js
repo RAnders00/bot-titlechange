@@ -880,6 +880,12 @@ async function tcbquit(channelName, context, params) {
     await quit(channelName, context, params);
 }
 
+const pajbotLinkRegex = new RegExp("\\(?(?:(http|https):\\/\\/)?(?:((?:[^\\W\\s]|\\.|-|[:]{1})+)@{1})?" +
+    "((?:www.)?(?:[^\\W\\s]|\\.|-)+[\\.][^\\W\\s]{2,4}|localhost(?=\\/)|\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}" +
+    "\\.\\d{1,3})(?::(\\d*))?([\\/]?[^\\s\\?]*[\\/]{1})*(?:\\/?([^\\s\\n\\?\\[\\]\\{\\}\\#]*(?:(?=\\.))" +
+    "{1}|[^\\s\\n\\?\\[\\]\\{\\}\\.\\#]*)?([\\.]{1}[^\\s\\?\\#]*)?)?(?:\\?{1}([^\\s\\n\\#\\[\\]]*))?" +
+    "([\\#][^\\s\\n]*)?\\)?", "gi");
+
 // validates that the given input message is not banned in the given channel. If it is banned,
 // the method will recursively replace all banphrases with "***" until the message is no longer
 // banned.
@@ -897,15 +903,20 @@ async function censorBanphrases(channelName, message) {
 
     if (channelProtectionData == null || channelProtectionData["endpoint"] == null) {
         // banphrase protection not enabled in that channel
-        console.log(
-            `banphrase check skipped for >${message}< in ch ${channelName} (channel not protected)`
-        );
+        console.log(`banphrase check skipped for >${message}< in ch ${channelName} (channel not protected)`);
         return message;
     }
 
-    console.log(
-        `beginning banphrase check for >${message}< in ch ${channelName}`
-    );
+    if (channelProtectionData["pajbotLinkFilter"] === true) {
+        // censor links with pajbot regex
+        let noLinksMessage = message.replace(pajbotLinkRegex, "[link]");
+        if (noLinksMessage !== message) {
+            console.log(`replaced links, output string: ${noLinksMessage}`);
+            message = noLinksMessage;
+        }
+    }
+
+    console.log(`beginning banphrase check for >${message}< in ch ${channelName}`);
 
     let banned = true;
     do {

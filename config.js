@@ -53,6 +53,7 @@ const modChannels = [
 
 // tip: use !userid <usernames...> command in the #pajlada chat to get user IDs
 // add the "protection" object to enable pajbot banphrase checking protection
+// pajbotLinkFilter filters out parts of the message that would match the link regex
 // add lengthLimit and/or valueLengthLimit to set message length limits and length limits
 // for the value printed into notify messages (value will be clipped otherwise)
 // if unset, default values of 400 and lengthLimit/4 will be used
@@ -81,6 +82,7 @@ let enabledChannels = {
         },
         "protection": {
             "endpoint": "https://forsen.tv/api/v1/banphrases/test",
+            "pajbotLinkFilter": true,
             "offlineOnly": true,
             "disabledCommands": [
                 "debug"
