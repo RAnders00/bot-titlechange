@@ -16,7 +16,6 @@ const opts = {
         '#forsen',
         '#akkirasetsu',
         '#supinic',
-        '#zflare3',
         '#nymn',
         '#vadikus007',
         '#bajlada',
@@ -59,6 +58,15 @@ const modChannels = [
 // if unset, default values of 400 and lengthLimit/4 will be used
 // add offlineOnly = true to make the bot only print notifies while channel is offline (or changing live status)
 // disabledCommands can be an array of (lowercase) command names to disable
+
+// this character is injected into some channels where the broadcaster asked to not get pinged
+// by notifies in his channel
+const invisibleAntiPingCharacter = "\u206D";
+
+function obfuscateName(str) {
+    return str.split('').join(invisibleAntiPingCharacter);
+}
+
 let enabledChannels = {
     "randers00": {
         "id": 40286300,
@@ -94,8 +102,8 @@ let enabledChannels = {
         "formats": {
             "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
             "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-            "live": "PagChomp 👉 pajlada has gone live pajaH 👉 ",
-            "offline": "pajaSad pajlada has gone offline pajaSad 👉 "
+            "live": `PagChomp 👉 ${obfuscateName("pajlada")} has gone live pajaH 👉 `,
+            "offline": `pajaSad ${obfuscateName("pajlada")} has gone offline pajaSad 👉 `
         },
         "protection": {
             "endpoint": "https://paj.pajlada.se/api/v1/banphrases/test",
@@ -116,15 +124,6 @@ let enabledChannels = {
             "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
             "live": "ppHop supinic has gone live ppHop 👉 ",
             "offline": "FeelsBadMan supinic has gone offline FeelsBadMan 👉 "
-        },
-    },
-    "zflare3": {
-        "id": 143339442,
-        "formats": {
-            "title": "Bestboy NEW TITLE! Bestboy 👉 $VALUE$ 👉 ",
-            "game": "Bestboy NEW GAME! Bestboy 👉 $VALUE$ 👉 ",
-            "live": "Bestboy Zflare3 has gone live Bestboy 👉 ",
-            "offline": "FeelsBadMan Zflare3 has gone offline FeelsBadMan 👉 "
         },
     },
     "nymn": {
