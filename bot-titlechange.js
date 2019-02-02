@@ -351,7 +351,7 @@ async function runChangeNotify(channelName, key, value) {
 
         let buildNotifyMsg = function (usersArray) {
             let msg = eventFormat;
-            msg += usersArray.join(', ');
+            msg += usersArray.join(' ');
             msg = msg.trim();
             return msg;
         };
