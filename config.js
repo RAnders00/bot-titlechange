@@ -140,7 +140,7 @@ let enabledChannels = {
             "lengthLimit": 300, // only in online chat
             //"noPingMode": true,
             "disabledCommands": [
-               // "notifyme"
+                // "notifyme"
             ]
         }
     },
