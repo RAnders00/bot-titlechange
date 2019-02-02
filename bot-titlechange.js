@@ -268,8 +268,8 @@ async function runChangeNotify(channelName, key, value) {
     let formats = channelData["formats"];
 
     let protection = channelData["protection"] || {};
-    // do we have a char limit (for whole messages)? otherwise use default limit of 400.
-    let lengthLimit = protection["lengthLimit"] || 400;
+    // do we have a char limit (for whole messages)? otherwise use default limit of 500.
+    let lengthLimit = protection["lengthLimit"] || 500;
     // leave two characters for chatterino alternate character (this is added in the sendMessageUnsafe function later)
     lengthLimit -= 2;
 
@@ -1016,7 +1016,7 @@ async function sendMessage(channelName, message) {
     // crop to length limit in this channel, if protected and length limit exists
     let channelConfig = config.enabledChannels[channelName] || {};
     let protectionConfig = channelConfig["protection"] || {};
-    let lengthLimit = protectionConfig["lengthLimit"] || 400;
+    let lengthLimit = protectionConfig["lengthLimit"] || 500;
     // leave a space of 2 characters should the sender function decide to add the alternate message
     // invisible character at the end.
     lengthLimit -= 2;

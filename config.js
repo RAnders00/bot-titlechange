@@ -55,7 +55,7 @@ const modChannels = [
 // pajbotLinkFilter filters out parts of the message that would match the link regex
 // add lengthLimit and/or valueLengthLimit to set message length limits and length limits
 // for the value printed into notify messages (value will be clipped otherwise)
-// if unset, default values of 400 and lengthLimit/4 will be used
+// if unset, default values of 500 and lengthLimit/4 will be used
 // add offlineOnly = true to make the bot only print notifies while channel is offline (or changing live status)
 // disabledCommands can be an array of (lowercase) command names to disable
 
