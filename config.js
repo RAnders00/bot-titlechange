@@ -19,7 +19,8 @@ const opts = {
         '#zflare3',
         '#nymn',
         '#vadikus007',
-		'#bajlada',
+        '#bajlada',
+        '#fourtf',
         '#pajlada'/**/
     ]
 };
@@ -148,6 +149,15 @@ let enabledChannels = {
             "game": "yeetDog NEW GAME! yeetDog 👉 $VALUE$ 👉 ",
             "live": "yeetDog bajlada HAS GONE LIVE! yeetDog 👉 ",
             "offline": "yeetDog bajlada HAS GONE OFFLINE! yeetDog 👉 "
+        }
+    },
+    "fourtf": {
+        "id": 54633016,
+        "formats": {
+            "title": "PagChomp NEW TITLE! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
+            "live": "PagChomp FOURTF HAS GONE LIVE! PagChomp FeelsPingedMan 👉 ",
+            "offline": "FeelsBadMan FOURTF HAS GONE OFFLINE! FeelsBadMan 👉 ",
         }
     },
     "vadikus007": {
