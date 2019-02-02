@@ -103,8 +103,8 @@ let enabledChannels = {
                 "bot",
                 "ping",
                 "help",
-				"game",
-				"title",
+                "game",
+                "title",
                 "debug"
             ]
         }
