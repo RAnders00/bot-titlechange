@@ -48,49 +48,68 @@ const knownCommands = [
 // "forsen": { "title": <title>, "game": <game>, "live": true/false, }
 let currentData = {};
 
-// available events for signing up for pings
-const availableEvents = {
-    title: {
-        matcher: function (key, value) {
-            return key === "title";
+// only the events that have a configured format are supported by a channel.
+function getChannelAvailableEvents(channelName) {
+    // available events for signing up for pings
+    const availableEvents = {
+        title: {
+            matcher: function (key, value) {
+                return key === "title";
+            },
+            hasValue: true,
+            description: "when the title changes"
         },
-        hasValue: true,
-        description: "when the title changes"
-    },
-    game: {
-        matcher: function (key, value) {
-            return key === "game";
+        game: {
+            matcher: function (key, value) {
+                return key === "game";
+            },
+            hasValue: true,
+            description: "when the game changes"
         },
-        hasValue: true,
-        description: "when the game changes"
-    },
-    live: {
-        matcher: function (key, value) {
-            return key === "live" && value === true;
+        live: {
+            matcher: function (key, value) {
+                return key === "live" && value === true;
+            },
+            hasValue: false,
+            description: "when the streamer goes live"
         },
-        hasValue: false,
-        description: "when the streamer goes live"
-    },
-    offline: {
-        matcher: function (key, value) {
-            return key === "live" && value === false;
+        offline: {
+            matcher: function (key, value) {
+                return key === "live" && value === false;
+            },
+            hasValue: false,
+            description: "when the streamer goes offline"
         },
-        hasValue: false,
-        description: "when the streamer goes offline"
-    }
-};
+        partner: {
+            matcher: function (key, value) {
+                return key === "partner" && value === true;
+            },
+            hasValue: false,
+            description: "when this streamer becomes partnered"
+        }
+    };
 
-function getListOfAvailableEvents() {
-    let eventArray = Object.keys(availableEvents);
+    let returnObject = {};
+
+    Object.keys(availableEvents)
+        .filter(evName => evName in config.enabledChannels[channelName]["formats"])
+        .forEach(evName => returnObject[evName] = availableEvents[evName]);
+
+    return returnObject;
+}
+
+function getListOfAvailableEvents(channelName) {
+    let eventArray = Object.keys(getChannelAvailableEvents(channelName));
     eventArray.sort();
     return eventArray.join(", ");
 }
 
 // print all events
 async function events(channelName, context, params) {
-    let eventArray = Object.keys(availableEvents);
+    let channelAvailableEvents = getChannelAvailableEvents(channelName);
+    let eventArray = Object.keys(channelAvailableEvents);
     let allEventsString = eventArray.sort()
-        .map(evName => `${evName} (${availableEvents[evName].description})`)
+        .map(evName => `${evName} (${channelAvailableEvents[evName].description})`)
         .join(', ');
 
     await sendReply(channelName, context["display-name"], `Available events: ${allEventsString}. ` +
@@ -131,6 +150,7 @@ async function doChannelAPIUpdates(channelName, channelId) {
 
         await updateChannelProperty(channelName, "title", response["status"]);
         await updateChannelProperty(channelName, "game", response["game"]);
+        await updateChannelProperty(channelName, "partner", response["partner"]);
         await updateChannelProperty(channelName, "id", response["_id"]);
 
     } catch (error) {
@@ -138,6 +158,7 @@ async function doChannelAPIUpdates(channelName, channelId) {
 
         await updateChannelProperty(channelName, "title", null);
         await updateChannelProperty(channelName, "game", null);
+        await updateChannelProperty(channelName, "partner", null);
         await updateChannelProperty(channelName, "id", null);
     }
 
@@ -286,7 +307,7 @@ async function runChangeNotify(channelName, key, value) {
     //
     //  now do the pings.
     //
-    for (let [eventName, eventConfig] of Object.entries(availableEvents)) {
+    for (let [eventName, eventConfig] of Object.entries(getChannelAvailableEvents(channelName))) {
         if (!(eventConfig["matcher"](key, value))) {
             // event does not match.
             continue;
@@ -375,7 +396,7 @@ async function runChangeNotify(channelName, key, value) {
         }
 
         for (let msgToPrint of messagesToPrint) {
-            await sendMessage(channelName, msgToPrint);
+            await sendMessage(sendChannel, msgToPrint);
         }
     }
 
@@ -446,22 +467,22 @@ async function notifyme(channelName, context, params) {
 
     if (params.length < 1) {
         await sendReply(channelName, context["display-name"], `Please specify an event to subscribe to. ` +
-            `The following events are available: ${getListOfAvailableEvents()}`);
+            `The following events are available: ${getListOfAvailableEvents(channelName)}`);
         return;
     }
 
     let eventName = params[0];
     eventName = eventName.toLowerCase();
 
-    if (!(eventName in availableEvents)) {
+    if (!(eventName in getChannelAvailableEvents(channelName))) {
         await sendReply(channelName, context["display-name"], `The given event name is not valid. ` +
-            `The following events are available: ${getListOfAvailableEvents()}`);
+            `The following events are available: ${getListOfAvailableEvents(channelName)}`);
         return;
     }
 
     let requiredValue = params.slice(1).join(" ");
 
-    let eventConfig = availableEvents[eventName];
+    let eventConfig = getChannelAvailableEvents(channelName)[eventName];
 
     if (!eventConfig.hasValue && requiredValue.length > 0) {
         // requesting specific value when this is not an event that takes on a value. (e.g. live/offline)
@@ -564,22 +585,22 @@ async function removeme(channelName, context, params) {
 
     if (params.length < 1) {
         await sendReply(channelName, context["display-name"], `Please specify an event to unsubscribe from. ` +
-            `The following events are available: ${getListOfAvailableEvents()}`);
+            `The following events are available: ${getListOfAvailableEvents(channelName)}`);
         return;
     }
 
     let eventName = params[0];
     eventName = eventName.toLowerCase();
 
-    if (!(eventName in availableEvents)) {
+    if (!(eventName in getChannelAvailableEvents(channelName))) {
         await sendReply(channelName, context["display-name"], `The given event name is not valid. ` +
-            `The following events are available: ${getListOfAvailableEvents()}. You can view all your subscriptions `);
+            `The following events are available: ${getListOfAvailableEvents(channelName)}. You can view all your subscriptions `);
         return;
     }
 
     let requiredValue = params.slice(1).join(" ");
 
-    let eventConfig = availableEvents[eventName];
+    let eventConfig = getChannelAvailableEvents(channelName)[eventName];
 
     if (!eventConfig.hasValue && requiredValue.length > 0) {
         // requesting specific value when this is not an event that takes on a value. (e.g. live/offline)
@@ -642,7 +663,7 @@ async function subscribed(channelName, context, params) {
 
     let msgParts = [];
     for (let eventName of eventNames) {
-        let eventConfig = availableEvents[eventName];
+        let eventConfig = getChannelAvailableEvents(channelName)[eventName];
         let eventSubscriptions = activeSubscriptions
             .filter(sub => sub.event === eventName);
 
@@ -681,7 +702,7 @@ async function subscribed(channelName, context, params) {
         await sendReply(channelName, context["display-name"],
             "You are not subscribed to any events. Use !notifyme <event> [optional value] to subscribe. " +
 
-            `Valid events are: ${getListOfAvailableEvents()}`
+            `Valid events are: ${getListOfAvailableEvents(channelName)}`
         );
         return;
     }

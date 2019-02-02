@@ -64,7 +64,8 @@ let enabledChannels = {
             "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
             "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
             "live": "ppHop randers00 is live ppHop 👉 ",
-            "offline": "MistyHisty randers00 has gone offline MistyHisty 👉 "
+            "offline": "MistyHisty randers00 has gone offline MistyHisty 👉 ",
+            "partner": "lol partnered "
         }, "protection": {
             "valueLengthLimit": 80
         }
@@ -155,7 +156,8 @@ let enabledChannels = {
             "title": "PagChomp NEW TITLE! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
             "game": "PagChomp NEW GAME! PagChomp FeelsPingedMan 👉 $VALUE$ 👉 ",
             "live": "PagChomp VADIKUS HAS GONE LIVE! PagChomp FeelsPingedMan 👉 ",
-            "offline": "yeetDog bajlada HAS GONE OFFLINE! yeetDog FeelsPingedMan 👉 "
+            "offline": "FeelsBadMan VADIKUS HAS GONE OFFLINE! FeelsBadMan 👉 ",
+            "partner": "PagChomp PagChomp PagChomp PagChomp 👉 VADIKUS IS NOW A TWITCH PARTNER!!!! PagChomp PagChomp PagChomp PagChomp 👉 "
         },
         "protection": {
             "lengthLimit": 250
