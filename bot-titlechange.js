@@ -668,6 +668,10 @@ async function subscribed(channelName, context, params) {
     let msgParts = [];
     for (let eventName of eventNames) {
         let eventConfig = getChannelAvailableEvents(channelName)[eventName];
+        if (typeof eventConfig === "undefined") {
+            continue;
+        }
+
         let eventSubscriptions = activeSubscriptions
             .filter(sub => sub.event === eventName);
 
