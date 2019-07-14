@@ -154,7 +154,9 @@ async function doChannelAPIUpdates(channelName, channelId) {
         await updateChannelProperty(channelName, "id", response["_id"]);
 
     } catch (error) {
-        console.log(error);
+        if (error.response && error.response.statusCode !== 422) {
+            console.log(error);
+        }
 
         await updateChannelProperty(channelName, "title", null);
         await updateChannelProperty(channelName, "game", null);
@@ -186,7 +188,9 @@ async function doStreamAPIUpdates(channelName, channelId) {
         }
 
     } catch (error) {
-        console.log(error);
+        if (error.response && error.response.statusCode !== 422) {
+            console.log(error);
+        }
 
         await updateChannelProperty(channelName, "live", null);
     }
