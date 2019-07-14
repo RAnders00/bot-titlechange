@@ -1047,7 +1047,7 @@ async function sendMessageUnsafe(channelName, message) {
                 let lastEgressMessage = lastEgressMessages[channelName];
 
                 if (lastEgressMessage === message) {
-                    message += ' \u206D';
+                    message += ' \u{E0000}';
                 }
                 console.log(
                     `EGRESS [to: ${channelName}] >${message}<`
