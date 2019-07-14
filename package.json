@@ -1,6 +1,6 @@
 {
   "name": "bot-titlechange",
-  "version": "0.0.1-SNAPSHOT",
+  "version": "1.0.0",
   "description": "",
   "main": "bot-titlechange.js",
   "scripts": {
