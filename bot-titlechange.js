@@ -1018,7 +1018,7 @@ async function sendMessage(channelName, message) {
     // crop to length limit in this channel, if protected and length limit exists
     let channelConfig = config.enabledChannels[channelName] || {};
     let protectionConfig = channelConfig["protection"] || {};
-    let lengthLimit = protectionConfig["lengthLimit"] || 500;
+    let lengthLimit = protectionConfig["lengthLimit"] || config.globalLengthLimit;
     // leave a space of 2 characters should the sender function decide to add the alternate message
     // invisible character at the end.
     lengthLimit -= 2;
