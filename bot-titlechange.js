@@ -504,9 +504,9 @@ async function notifyme(channelName, context, params) {
         // user is requesting generic sub when they have specific ones on record.
         // remove all their subs and replace them with one generic one.
         userSubscriptions = userSubscriptions
-            .filter(sub => sub.channel === channelName)
-            .filter(sub => sub.user === context["username"])
-            .filter(sub => sub.event === eventName);
+            .filter(sub => sub.channel !== channelName)
+            .filter(sub => sub.user !== context["username"])
+            .filter(sub => sub.event !== eventName);
         userSubscriptions.push({
             channel: channelName,
             user: context["username"],
