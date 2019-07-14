@@ -38,9 +38,7 @@ const knownCommands = [
     tcbping,
     setData,
     debugData,
-    debug,
     tcbdebug,
-    quit,
     tcbquit];
 
 // the main data storage object.
@@ -845,7 +843,7 @@ function debugData(channelName, context, params) {
 
 }
 
-async function debug(channelName, context, params) {
+async function tcbdebug(channelName, context, params) {
 
     if (!config.administrators.includes(context["username"])) {
         return;
@@ -869,11 +867,7 @@ async function debug(channelName, context, params) {
     }
 }
 
-async function tcbdebug(channelName, context, params) {
-    await debug(channelName, context, params);
-}
-
-async function quit(channelName, context, params) {
+async function tcbquit(channelName, context, params) {
 
     if (!config.administrators.includes(context["username"])) {
         return;
@@ -882,10 +876,6 @@ async function quit(channelName, context, params) {
     await sendReply(channelName, context["display-name"], "Quitting/restarting...");
     process.exit(1);
 
-}
-
-async function tcbquit(channelName, context, params) {
-    await quit(channelName, context, params);
 }
 
 const pajbotLinkRegex = new RegExp("\\(?(?:(http|https):\\/\\/)?(?:((?:[^\\W\\s]|\\.|-|[:]{1})+)@{1})?" +
