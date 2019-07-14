@@ -234,8 +234,8 @@ const valueRegex = /\$VALUE\$/g;
 // this array is indexed by the value key, e.g. "title", "game", "live" (and not "offline")
 const lastNotifies = {};
 // in milliseconds, for each channel and each value
-// 30 seconds, because the live -> offline transition is very inconsistent with the API
-const notifyCooldown = 30000;
+// 5 minutes, because the live -> offline transition is very inconsistent with the API
+const notifyCooldown = 5 * 60 * 1000;
 
 async function runChangeNotify(channelName, key, value) {
     console.log(`notify: ${channelName} ${key} ${value}`);
