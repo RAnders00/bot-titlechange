@@ -794,7 +794,7 @@ async function bot(channelName, context, params) {
         return;
     }
 
-    await sendReply(channelName, context["display-name"], "I am a bot made by RAnders00. I can notify you when the channel goes live or the title changes. Try !help for a list of commands. pajaDank");
+    await sendReply(channelName, context["display-name"], "I am a bot made by randers. I can notify you when the channel goes live or the title changes. Try !help for a list of commands. pajaDank");
 }
 
 async function titlechange_bot(channelName, context, params) {
@@ -985,7 +985,7 @@ async function censorBanphrases(channelName, message) {
                 let censoredMessage = message.replace(phraseRegex, "***");
                 if (censoredMessage === message) {
                     console.error("Was unable to modify the string with the built regex at all. Returning error message");
-                    return "error while trying to censor banphrases monkaOMEGA @RAnders00";
+                    return "error while trying to censor banphrases monkaOMEGA @randers";
                 }
                 message = censoredMessage;
                 console.log(
