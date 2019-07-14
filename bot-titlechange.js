@@ -330,6 +330,7 @@ async function runChangeNotify(channelName, key, value) {
             .map(sub => sub.user);
 
         // get the message format
+		console.log(`eventName: ${eventName}`);
         let eventFormat = formats[eventName];
         if (key === "live" && !value) {
             eventFormat = formats["offline"];
