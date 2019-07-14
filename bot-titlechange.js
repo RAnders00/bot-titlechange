@@ -259,7 +259,7 @@ async function runChangeNotify(channelName, key, value) {
     }
     let timeNow = Date.now();
     let timeSinceLastNotify = timeNow - lastNotified;
-    if (timeSinceLastNotify <= notifyCooldown) {
+    if (key === "live" && timeSinceLastNotify <= notifyCooldown) {
         // notify wasn't run, don't save the time.
         console.log(`lastNotified: ${lastNotified}`);
         console.log(`timeSinceLastNotify: ${timeSinceLastNotify}`);
