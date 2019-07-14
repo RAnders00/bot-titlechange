@@ -1009,6 +1009,10 @@ let egressMessageLocks = [];
 let egressMessageTimers = [];
 
 async function sendMessage(channelName, message) {
+    if (message.length <= 0) {
+        return;
+    }
+
     message = await censorBanphrases(channelName, message);
 
     // crop to length limit in this channel, if protected and length limit exists
