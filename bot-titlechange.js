@@ -348,11 +348,10 @@ async function runChangeNotify(channelName, key, value) {
             return;
         }
 
-//        if (usersToPing.length <= 0) {
-//            // no users signed up for this event, skip
-//            continue;
-//        }
-
+        if (usersToPing.length <= 0) {
+            // no users signed up for this event, skip
+            continue;
+        }
 
         let buildNotifyMsg = function (usersArray) {
             let msg = eventFormat;
