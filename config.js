@@ -42,6 +42,7 @@ const opts = {
 		'#constera',
 		'#thesupergogo',
 		'#edomer',
+		'#seirion',
     ]
 };
 
@@ -394,6 +395,15 @@ let enabledChannels = {
             "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
             "live": "PagChomp 👉 edomer has gone live PagChomp 👉 ",
             "offline": "FeelsBadMan edomer has gone offline FeelsBadMan 👉 "
+        },
+    },
+    "seirion": {
+        "id": 62031020,
+        "formats": {
+            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "PagChomp 👉 Seirion has gone live PagChomp 👉 ",
+            "offline": "FeelsBadMan Seirion has gone offline FeelsBadMan 👉 "
         },
     }
 };
