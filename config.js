@@ -243,10 +243,10 @@ let enabledChannels = {
     "icdb": {
         "id": 38949074,
         "formats": {
-            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
-            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-            "live": "PagChomp 👉 icdb has gone live PagChomp 👉 ",
-            "offline": "FeelsBadMan icdb has gone offline FeelsBadMan 👉 "
+            "title": "himExcite NEW TITLE! himExcite 👉 $VALUE$ 👉 ",
+            "game": "himExcite NEW GAME! himExcite 👉 $VALUE$ 👉 ",
+            "live": "himExcite 👉 icdb has gone live himExcite 👉 ",
+            "offline": "worryCry icdb has gone offline worryCry 👉 "
         },
     },
     "samme1g": {
