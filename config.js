@@ -319,9 +319,9 @@ let enabledChannels = {
     "leebaxd": {
         "id": 143473217,
         "formats": {
-            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
-            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-            "live": "PagChomp 👉 LeebaXD has gone live PagChomp 👉 ",
+            "title": "KokoPes NEW TITLE! KokoPes 👉 $VALUE$ 👉 ",
+            "game": "KokoPes NEW GAME! KokoPes 👉 $VALUE$ 👉 ",
+            "live": "KokoPes 👉 LeebaXD has gone live KokoPes 👉 ",
             "offline": "monkeyLick LeebaXD has gone offline monkeyLick 👉 "
         },
     },
