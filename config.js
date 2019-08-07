@@ -144,7 +144,7 @@ let enabledChannels = {
         "formats": {
             "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
             "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-            "live": "ppHop supinic has gone live ppHop 👉 ",
+            "live": "ppBounce supinic has gone live ppBounce 👉 ",
             "offline": "SadCat supinic has gone offline SadCat 👉 "
         },
     },
