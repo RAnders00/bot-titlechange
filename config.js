@@ -44,6 +44,7 @@ const opts = {
 		'#edomer',
 		'#seirion',
 		'#zauros0',
+		'#weebyshell',
     ]
 };
 
@@ -414,6 +415,15 @@ let enabledChannels = {
             "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
             "live": "PagChomp 👉 zauros0 has gone live PagChomp 👉 ",
             "offline": "FeelsBadMan zauros0 has gone offline FeelsBadMan 👉 "
+        },
+    },
+    "weebyshell": {
+        "id": 452807029,
+        "formats": {
+            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "PagChomp 👉 weebyshell has gone live PagChomp 👉 ",
+            "offline": "FeelsBadMan weebyshell has gone offline FeelsBadMan 👉 "
         },
     }
 };
