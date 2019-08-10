@@ -43,6 +43,7 @@ const opts = {
 		'#thesupergogo',
 		'#edomer',
 		'#seirion',
+		'#zauros0',
     ]
 };
 
@@ -404,6 +405,15 @@ let enabledChannels = {
             "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
             "live": "PagChomp 👉 Seirion has gone live PagChomp 👉 ",
             "offline": "FeelsBadMan Seirion has gone offline FeelsBadMan 👉 "
+        },
+    },
+    "zauros0": {
+        "id": 202839258,
+        "formats": {
+            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "PagChomp 👉 zauros0 has gone live PagChomp 👉 ",
+            "offline": "FeelsBadMan zauros0 has gone offline FeelsBadMan 👉 "
         },
     }
 };
