@@ -500,10 +500,13 @@ async function notifyme(channelName, context, params) {
     if (requiredValue.length <= 0 && specificSubs.length > 0) {
         // user is requesting generic sub when they have specific ones on record.
         // remove all their subs and replace them with one generic one.
-        userSubscriptions = userSubscriptions
-            .filter(sub => sub.channel !== channelName)
-            .filter(sub => sub.user !== context["username"])
-            .filter(sub => sub.event !== eventName);
+        let toRemove = userSubscriptions
+            .filter(sub => sub.channel === channelName)
+            .filter(sub => sub.user === context["username"])
+            .filter(sub => sub.event === eventName);
+
+        userSubscriptions = userSubscriptions.filter(sub => !toRemove.includes(sub));
+
         userSubscriptions.push({
             channel: channelName,
             user: context["username"],
@@ -511,7 +514,7 @@ async function notifyme(channelName, context, params) {
             requiredValue: requiredValue
         });
         await sendReply(channelName, context["display-name"], `Successfully subscribed you to the event ` +
-            `"${eventName}". You previously had subscriptions for this event that were set to only match specific values. ` +
+            `"${eventName}". You previously had ${toRemove.length} subscription(s) for this event that were set to only match specific values. ` +
             `These subscriptions have been removed and you will now be notified regardless of the value. SeemsGood`);
         return;
     }
