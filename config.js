@@ -46,6 +46,7 @@ const opts = {
 		'#zauros0',
         '#redshell',
 		'#weebyshell',
+		'#actualsw3tz',
     ]
 };
 
@@ -434,6 +435,15 @@ let enabledChannels = {
             "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
             "live": "PagChomp 👉 weebyshell has gone live PagChomp 👉 ",
             "offline": "FeelsBadMan weebyshell has gone offline FeelsBadMan 👉 "
+        },
+    },
+    "actualsw3tz": {
+        "id": 438122606,
+        "formats": {
+            "title": "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+            "game": "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+            "live": "PagChomp 👉 actualsw3tz has gone live PagChomp 👉 ",
+            "offline": "FeelsBadMan actualsw3tz has gone offline FeelsBadMan 👉 "
         },
     }
 };
