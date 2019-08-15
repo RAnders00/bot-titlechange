@@ -415,7 +415,7 @@ async function runChangeNotify(channelName, key, value) {
 
 async function saveUserSubscriptions(override = false) {
   if (!override) {
-    let previous = await storage.getItem("userSubscriptions");
+    let previous = await storage.getItem("userSubscriptions") || [];
 
     let removed = previous.length - userSubscriptions.length;
 
