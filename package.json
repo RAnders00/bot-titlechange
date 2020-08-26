@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/RAnders00/bot-titlechange#readme",
   "dependencies": {
-    "escape-string-regexp": "^3.0.0",
+    "escape-string-regexp": "^4.0.0",
     "node-async-locks": "^1.0.1",
     "node-persist": "^3.0.5",
     "request-promise": "^4.2.5",
