@@ -1,11 +1,11 @@
 ﻿"use strict";
 
 const tmi = require("tmi.js");
+const IORedis = require("ioredis");
 const request = require("request-promise");
 const storage = require("node-persist");
 const AsyncLock = require("node-async-locks").AsyncLock;
 const escapeStringRegexp = require("escape-string-regexp");
-const Timer = require("./edit-timer").Timer;
 const config = require("./config");
 
 function sleep(ms) {
@@ -415,44 +415,110 @@ async function runChangeNotify(channelName, key, value) {
 
 async function saveUserSubscriptions(override = false) {
   if (!override) {
-    let previous = await storage.getItem("userSubscriptions") || [];
+    let previous = (await storage.getItem("userSubscriptions")) || [];
 
     let removed = previous.length - userSubscriptions.length;
 
     if (removed > 4) {
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
-      console.error("XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING");
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
+      console.error(
+        "XXXXXXXXXXXXXXXXXXXXXXXXXXXX TRIED TO REMOVE TOO MANY SUBS, REFUSING"
+      );
       userSubscriptions = previous;
       return;
     }
@@ -1169,7 +1235,6 @@ async function sendReply(channelName, username, message) {
 
 let lastEgressMessages = [];
 let egressMessageLocks = [];
-let egressMessageTimers = [];
 
 async function sendMessage(channelName, message) {
   if (message.length <= 0) {
@@ -1226,15 +1291,7 @@ async function sendMessageUnsafe(channelName, message) {
         }
 
         // sleep (lock this channel) for 1650 ms (1200ms is minimum, but 1650 prevents us exceeding global limits)
-        // use a extendable timer in case we get timed out (then wait longer until lock release)
-        // see the onTimeoutHandler for more details
-        await new Promise(timerResolve => {
-          let timer = new Timer(1650, 1650, () => {
-            delete egressMessageTimers[channelName];
-            timerResolve();
-          });
-          egressMessageTimers[channelName] = timer;
-        });
+        await sleep(1650);
 
         console.log(`unlocking ${channelName}`);
         // unlock for this channel
@@ -1250,7 +1307,6 @@ let client = new tmi.client(config.opts);
 
 // Register our event handlers (defined below):
 client.on("message", onMessageHandler);
-client.on("timeout", onTimeoutHandler);
 client.on("connected", onConnectedHandler);
 client.on("disconnected", onDisconnectedHandler);
 
@@ -1276,7 +1332,34 @@ async function connect() {
 
 const endStripRegex = /[\s\u206D]+$/u;
 
-function onMessageHandler(target, context, msg, self) {
+const redis = new IORedis();
+redis.defineCommand("checkCooldown", {
+  numberOfKeys: 2,
+  lua: `local exists = redis.call('exists', KEYS[1], KEYS[2]);
+
+if exists == 0 then
+        -- both cooldowns are not hit
+        redis.call('psetex', KEYS[1], ARGV[1], '');
+        redis.call('psetex', KEYS[2], ARGV[2], '');
+        return 1
+else
+        return 0
+end`
+});
+
+const commandCooldowns = {
+  ping: {
+    user: 2 * 1000,
+    global: 1 * 1000
+  }
+};
+
+const defaultCooldowns = {
+  user: 5 * 1000,
+  global: 2 * 1000
+};
+
+async function onMessageHandler(target, context, msg, self) {
   if (self) {
     return;
   }
@@ -1317,54 +1400,27 @@ function onMessageHandler(target, context, msg, self) {
         continue;
       }
 
+      // cooldown config
+      let commandCooldownConfig = commandCooldowns[commandName];
+      if (commandCooldownConfig == null) {
+        commandCooldownConfig = defaultCooldowns;
+      }
+
+      // cooldown
+      const shouldRun = await redis.checkCooldown(
+        `bot-titlechange:cooldown:${context["room-id"]}:${commandName}:${context["user-id"]}`,
+        `bot-titlechange:cooldown:${context["room-id"]}:${commandName}`,
+        commandCooldownConfig.user,
+        commandCooldownConfig.global
+      );
+      if (shouldRun === 0) {
+        return;
+      }
+
       knownCommands[i](target, context, params);
       console.log(`* Executed ${commandName} command for ${context.username}`);
     }
   }
-}
-
-function onTimeoutHandler(channelName, username, reason, duration) {
-  const ourUsername = config.opts.identity.username;
-  if (username !== ourUsername) {
-    return;
-  }
-
-  // trim away the leading # character
-  channelName = channelName.substring(1);
-
-  let timer = egressMessageTimers[channelName];
-  if (typeof timer === "undefined") {
-    // get lock
-    let lock = egressMessageLocks[channelName];
-    if (typeof lock === "undefined") {
-      lock = new AsyncLock();
-      egressMessageLocks[channelName] = lock;
-    }
-
-    // create a timer and lock
-    lock.enter(token => {
-      console.log(`locked ${channelName} via timeout handler`);
-      (async () => {
-        await new Promise(resolve => {
-          timer = new Timer(duration * 1000, 0, () => {
-            delete egressMessageTimers[channelName];
-            resolve();
-          });
-          egressMessageTimers[channelName] = timer;
-        });
-
-        console.log(`unlocking ${channelName} from timeout handler`);
-        // unlock for this channel
-        token.leave();
-      })();
-    });
-
-    return;
-  }
-
-  // extend the existing timer.
-  // duration is in seconds, we need milliseconds here.
-  timer.update(duration * 1000);
 }
 
 function onConnectedHandler(addr, port) {
