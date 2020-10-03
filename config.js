@@ -156,7 +156,8 @@ let enabledChannels = {
             partner: 'lol partnered '
         },
         protection: {
-            valueLengthLimit: 80
+            valueLengthLimit: 80,
+            whisperCommandResponses: true
         }
     },
     forsen: {
@@ -987,6 +988,10 @@ let enabledChannels = {
             game: 'PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ',
             live: 'PagChomp 👉 sodapoppin has gone live PagChomp 👉 ',
             offline: 'FeelsBadMan sodapoppin has gone offline FeelsBadMan 👉 '
+        },
+        protection: {
+            offlineOnly: true,
+            whisperCommandResponses: true
         }
     }
 };

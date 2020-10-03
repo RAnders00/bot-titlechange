@@ -114,7 +114,7 @@ async function events(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     `Available events: ${allEventsString}. ` +
       `Type "${config.commandPrefix}notifyme <event> [optional value]" to subscribe to an event!`
   );
@@ -588,7 +588,7 @@ async function notifyme(channelName, context, params) {
   if (params.length < 1) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `Please specify an event to subscribe to. ` +
         `The following events are available: ${getListOfAvailableEvents(
           channelName
@@ -603,7 +603,7 @@ async function notifyme(channelName, context, params) {
   if (!(eventName in getChannelAvailableEvents(channelName))) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `The given event name is not valid. ` +
         `The following events are available: ${getListOfAvailableEvents(
           channelName
@@ -647,7 +647,7 @@ async function notifyme(channelName, context, params) {
     });
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `Successfully subscribed you to the event ` +
         `"${eventName}". You previously had ${toRemove.length} subscription(s) for this event that were set to only match specific values. ` +
         `These subscriptions have been removed and you will now be notified regardless of the value. SeemsGood`
@@ -688,7 +688,7 @@ async function notifyme(channelName, context, params) {
       if (requiredValue.length > 0) {
         await sendReply(
           channelName,
-          context["display-name"],
+          context,
           `You already have a subscription for the ` +
             `event "${eventName}" that matches *all* values. Should you want to only get pinged on specific values, ` +
             `type "${config.commandPrefix}removeme ${eventName}" and run this command again.`
@@ -696,7 +696,7 @@ async function notifyme(channelName, context, params) {
       } else {
         await sendReply(
           channelName,
-          context["display-name"],
+          context,
           `You already have a subscription for the ` +
             `event "${eventName}". If you want to unsubscribe, type "${config.commandPrefix}removeme ${eventName}".`
         );
@@ -706,7 +706,7 @@ async function notifyme(channelName, context, params) {
       // user is trying to add specific subscription, and already has this exact specific subscription.
       await sendReply(
         channelName,
-        context["display-name"],
+        context,
         `You already have a subscription for the event ` +
           `"${eventName}" with the value "${requiredValue}".`
       );
@@ -729,14 +729,14 @@ async function notifyme(channelName, context, params) {
     // new generic sub
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `I will now ping you in chat when ${eventConfig.description}!`
     );
   } else {
     // new specific sub
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `I will now ping you in chat when ${eventConfig.description}, but only when the value contains ` +
         `"${requiredValue}"!`
     );
@@ -747,7 +747,7 @@ async function removeme(channelName, context, params) {
   if (params.length < 1) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `Please specify an event to unsubscribe from. ` +
         `The following events are available: ${getListOfAvailableEvents(
           channelName
@@ -762,7 +762,7 @@ async function removeme(channelName, context, params) {
   if (!(eventName in getChannelAvailableEvents(channelName))) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `The given event name is not valid. ` +
         `The following events are available: ${getListOfAvailableEvents(
           channelName
@@ -802,7 +802,7 @@ async function removeme(channelName, context, params) {
       // user was not subbed to this event at all
       await sendReply(
         channelName,
-        context["display-name"],
+        context,
         `You are not subscribed to the event "${eventName}". You can view all your ` +
           `subscriptions with "${config.commandPrefix}subscribed".`
       );
@@ -810,7 +810,7 @@ async function removeme(channelName, context, params) {
       // did not match that requiredValue
       await sendReply(
         channelName,
-        context["display-name"],
+        context,
         `You are not subscribed to the event "${eventName}" with the value "${requiredValue}" o_O ` +
           `You can view all your subscriptions with "${config.commandPrefix}subscribed".`
       );
@@ -824,7 +824,7 @@ async function removeme(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     `Successfully unsubscribed you from the event "${eventName}" ` +
       `${requiredValue.length > 0 ? `for the value "${requiredValue}" ` : ""}` +
       `(removed ${toRemove.length} ` +
@@ -883,7 +883,7 @@ async function subscribed(channelName, context, params) {
   if (msgParts.length < 1) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `You are not subscribed to any events. Use ${config.commandPrefix}notifyme <event> [optional value] to subscribe. ` +
         `Valid events are: ${getListOfAvailableEvents(channelName)}`
     );
@@ -892,7 +892,7 @@ async function subscribed(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
 
     `Your subscriptions in this channel: ${msgParts.join(", ")}`
   );
@@ -902,7 +902,7 @@ async function title(channelName, context, params) {
   if (!(channelName in config.enabledChannels)) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       "Error: This channel is not enabled."
     );
     return;
@@ -910,7 +910,7 @@ async function title(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     `Current title: ${currentData[channelName]["title"]}`
   );
 }
@@ -919,7 +919,7 @@ async function game(channelName, context, params) {
   if (!(channelName in config.enabledChannels)) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       "Error: This channel is not enabled."
     );
     return;
@@ -927,7 +927,7 @@ async function game(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     `Current game: ${currentData[channelName]["game"]}`
   );
 }
@@ -936,7 +936,7 @@ async function islive(channelName, context, params) {
   if (!(channelName in config.enabledChannels)) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       "Error: This channel is not enabled."
     );
     return;
@@ -944,7 +944,7 @@ async function islive(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     `Current live status: ${
       currentData[channelName]["live"]
         ? "The channel is live!"
@@ -957,7 +957,7 @@ async function help(channelName, context, params) {
   if (!(channelName in config.enabledChannels)) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       "Error: This channel is not enabled."
     );
     return;
@@ -965,7 +965,7 @@ async function help(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     `Available commands: ${config.commandPrefix}notifyme <event> [optional value], ` +
       `${config.commandPrefix}removeme <event> [optional value], ${config.commandPrefix}subscribed, ${config.commandPrefix}events, ${config.commandPrefix}title, ${config.commandPrefix}game, ${config.commandPrefix}islive, ${config.commandPrefix}help`
   );
@@ -991,7 +991,7 @@ async function bot(channelName, context, params) {
   if (!(channelName in config.enabledChannels)) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       "Error: This channel is not enabled."
     );
     return;
@@ -999,7 +999,7 @@ async function bot(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     `I am a bot made by randers. I can notify you when the channel goes live or the title changes. Try ${config.commandPrefix}help for a list of commands. pajaDank`
   );
 }
@@ -1015,7 +1015,7 @@ async function titlechangebot(channelName, context, params) {
 async function ping(channelName, context, params) {
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     "Reporting for duty NaM 7"
   );
 }
@@ -1032,7 +1032,7 @@ async function setData(channelName, context, params) {
   if (!(channelName in config.enabledChannels)) {
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       "Error: This channel is not enabled."
     );
     return;
@@ -1078,7 +1078,7 @@ async function tcbdebug(channelName, context, params) {
 
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       JSON.stringify(result)
     );
     console.log(result);
@@ -1086,7 +1086,7 @@ async function tcbdebug(channelName, context, params) {
     console.log(e);
     await sendReply(
       channelName,
-      context["display-name"],
+      context,
       `Error thrown: ${String(e)}`
     );
   }
@@ -1099,7 +1099,7 @@ async function tcbquit(channelName, context, params) {
 
   await sendReply(
     channelName,
-    context["display-name"],
+    context,
     "Quitting/restarting..."
   );
   process.exit(1);
@@ -1229,8 +1229,12 @@ async function censorBanphrases(channelName, message) {
   return message;
 }
 
-async function sendReply(channelName, username, message) {
-  await sendMessage(channelName, `@${username}, ${message}`);
+async function sendReply(channelName, context, message) {
+  if ((config.enabledChannels[channelName] ?? {}).protection?.whisperCommandResponses ?? false) {
+    await client.whisper(context["username"], message);
+  } else {
+    await sendMessage(channelName, `@${context["display-name"]}, ${message}`);
+  }
 }
 
 let lastEgressMessages = [];
