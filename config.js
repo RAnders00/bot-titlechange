@@ -187,14 +187,6 @@ let enabledChannels = {
             endpoint: 'https://pajlada.pajbot.com/api/v1/banphrases/test',
             disabledCommands: ['bot', 'ping', 'help', 'game', 'title']
         },
-        webhooks: {
-            live: [
-                {
-                    url:
-                        'https://discordapp.com/api/webhooks/657323169698414603/OihD51Lo4Hik4kRNHUmHPZBFFgKLLcyP0r2-hio6VvszSX6N2yBGbtLij458-uGNwM2E'
-                }
-            ]
-        }
     },
     supinic: {
         id: 31400525,
