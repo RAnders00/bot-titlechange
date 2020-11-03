@@ -1334,7 +1334,7 @@ async function connect() {
   setInterval(refreshData, 5 * 1000);
 }
 
-const endStripRegex = /[\s\u206D]+$/u;
+const endStripRegex = /[\s\u{206D}\u{000e0000}]+$/u;
 
 const redis = new IORedis();
 redis.defineCommand("checkCooldown", {
