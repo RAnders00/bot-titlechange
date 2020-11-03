@@ -10,99 +10,7 @@ const opts = {
         username: 'titlechange_bot',
         password: secrets.ircPassword
     },
-    channels: [
-        '#titlechange_bot',
-        '#randers',
-        '#forsen',
-        '#akkirasetsu',
-        '#supinic',
-        '#nymn',
-        '#vadikus007',
-        '#bajlada',
-        '#fourtf',
-        '#apa420',
-        '#splitcrumbs',
-        '#haxk',
-        '#akylus_',
-        '#icdb',
-        '#pajlada',
-        '#samme1g',
-        '#seastv',
-        '#fabulouspotato69',
-        '#teyn',
-        '#coral',
-        '#thesigge989',
-        '#karabast',
-        '#leebaxd',
-        '#shadopi',
-        '#teodorv',
-        '#tolekk',
-        '#sneesi',
-        '#pepsicolasoda',
-        '#constera',
-        '#thesupergogo',
-        '#edomer',
-        '#seirion',
-        '#zauros0',
-        '#redshell',
-        '#weebyshell',
-        '#actualsw3tz',
-        '#360zeus',
-        '#weest',
-        '#fabzeef',
-        '#nosignal_1337',
-        '#vesp3r',
-        '#sinris',
-        '#nymnsmodsweirdchamp',
-        '#ourlordtalos',
-        '#college_boi',
-        '#elina',
-        '#rooftophobo',
-        '#tene__',
-        '#ebbel',
-        '#echoflexx',
-        '#beem0o',
-        '#laden',
-        '#zemmygo',
-        '#nam______________________',
-        '#smaczny',
-        '#iownyouanyway',
-        '#shibez__',
-        '#okhuntre',
-        '#teischente',
-        '#kiansly',
-        '#omegamk19',
-        '#emergencycurse',
-        '#harmfulopinions',
-        '#chickendins',
-        '#hadezzishappy',
-        '#sohyp3d',
-        '#ali2465',
-        '#shungite_dealer_rauuuul',
-        '#marinak0s',
-        '#cubiie',
-        '#romydank',
-        '#thanhschaefer',
-        '#acrivfx',
-        '#znicuuu',
-        '#pulcsi_',
-        '#connerxdd',
-        '#thegoldenfury',
-        '#senderak',
-        '#kattah',
-        '#katsugara',
-        '#lukickk',
-        '#mrolle_',
-        '#knobo_',
-        '#0ut3',
-        '#swzzl',
-        '#ggft4',
-        '#kehlery',
-        '#daie_',
-        '#seanc26',
-        '#psychonautandy',
-        '#sodapoppin',
-    ]
+    channels: []
 };
 
 // Valid commands start with:
@@ -514,10 +422,10 @@ let enabledChannels = {
     fabzeef: {
         id: 148973258,
         formats: {
-            title: 'PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ',
-            game: 'PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ',
-            live: 'PagChomp 👉 fabZeef has gone live PagChomp 👉 ',
-            offline: 'FeelsBadMan fabZeef has gone offline FeelsBadMan 👉 '
+            title: 'FEELSWAYTOODANKMAN NEW TITLE! FEELSWAYTOODANKMAN 👉 $VALUE$ 👉 ',
+            game: 'FEELSWAYTOODANKMAN NEW GAME! FEELSWAYTOODANKMAN 👉 $VALUE$ 👉 ',
+            live: 'dankClappers 👉 fabZeef has gone live dankClappers 👉 ',
+            offline: 'peepoDownSadDank fabZeef has gone offline peepoDownSadDank 👉 '
         }
     },
     nosignal_1337: {
@@ -993,8 +901,55 @@ let enabledChannels = {
             offlineOnly: true,
             whisperCommandResponses: true
         }
-    }
+    },
+    ceduce: {
+        id: 136329559,
+        formats: {
+            title: 'PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ',
+            game: 'PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ',
+            live: 'PagChomp 👉 Ceduce has gone live PagChomp 👉 ',
+            offline: 'FeelsBadMan Ceduce has gone offline FeelsBadMan 👉 '
+        },
+    },
+    empyrione: {
+        id: 111828877,
+        formats: {
+            title: 'FeelsDankMan Clap NEW TITLE! FeelsDankMan Clap 👉 $VALUE$ 👉 ',
+            game: 'FeelsDankMan Clap NEW GAME! FeelsDankMan Clap 👉 $VALUE$ 👉 ',
+            live: 'FeelsDankMan Clap 👉 empyrione has gone live FeelsDankMan Clap 👉 ',
+            offline: 'peepoSadDankSip empyrione has gone offline peepoSadDankSip 👉 '
+        },
+    },
+    mik7: {
+        id: 438281108,
+        formats: {
+            title: 'PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ',
+            game: 'PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ',
+            live: 'PagChomp 👉 mik7 has gone live PagChomp 👉 ',
+            offline: 'FeelsBadMan mik7 has gone offline FeelsBadMan 👉 '
+        },
+    },
+    mr_randomnese: {
+        id: 94652036,
+        formats: {
+            title: 'PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ',
+            game: 'PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ',
+            live: 'PagChomp 👉 Mr_Randomnese has gone live PagChomp 👉 ',
+            offline: 'FeelsBadMan Mr_Randomnese has gone offline FeelsBadMan 👉 '
+        },
+    },
+    airflyfilms: {
+        id: 222122589,
+        formats: {
+            title: 'PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ',
+            game: 'PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ',
+            live: 'PagChomp 👉 airflyfilms has gone live PagChomp 👉 ',
+            offline: 'FeelsBadMan airflyfilms has gone offline FeelsBadMan 👉 '
+        },
+    },
 };
+
+opts.channels.push(...Object.keys(enabledChannels));
 
 module.exports = {
     opts: opts,
