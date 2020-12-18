@@ -23,7 +23,7 @@
     "node-async-locks": "^1.0.1",
     "node-persist": "^3.1.0",
     "request-promise": "^4.2.6",
-    "tmi.js": "^1.5.0"
+    "tmi.js": "^1.7.0"
   },
   "devDependencies": {
     "prettier": "^2.1.2"
