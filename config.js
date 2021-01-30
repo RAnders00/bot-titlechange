@@ -417,8 +417,8 @@ let enabledChannels = {
   fabzeef: {
     id: 148973258,
     formats: {
-      title: "FEELSWAYTOODANKMAN NEW TITLE! FEELSWAYTOODANKMAN 👉 $VALUE$ 👉 ",
-      game: "FEELSWAYTOODANKMAN NEW GAME! FEELSWAYTOODANKMAN 👉 $VALUE$ 👉 ",
+      title: "DinkBeef NEW TITLE! DinkBeef 👉 $VALUE$ 👉 ",
+      game: "DinkBeef NEW GAME! DinkBeef 👉 $VALUE$ 👉 ",
       live: "dankClappers 👉 fabZeef has gone live dankClappers 👉 ",
       offline: "peepoDownSadDank fabZeef has gone offline peepoDownSadDank 👉 ",
     },
@@ -1225,9 +1225,9 @@ let enabledChannels = {
   swushwoi: {
     id: 150648930,
     formats: {
-      title: "PagMan NEW TITLE! PagMan 👉 $VALUE$ 👉 ",
-      game: "PagMan NEW GAME! PagMan 👉 $VALUE$ 👉 ",
-      live: "PagMan 👉 swushwoi has gone live PagMan 👉 ",
+      title: "VisMan NEW TITLE! VisMan 👉 $VALUE$ 👉 ",
+      game: "VisMan NEW GAME! VisMan 👉 $VALUE$ 👉 ",
+      live: "VisMan 👉 swushwoi has gone live VisMan 👉 ",
       offline: "FeelsBadMan swushwoi has gone offline FeelsBadMan 👉 ",
     },
   },
@@ -1328,6 +1328,169 @@ let enabledChannels = {
       game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
       live: "PogChamp 👉 IVIegaBeatzZ has gone live PogChamp 👉 ",
       offline: "FeelsBadMan IVIegaBeatzZ has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  nextfunnymemer: {
+    id: 136060664,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 NextFunnyMemer has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan NextFunnyMemer has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  mariodertrader: {
+    id: 140406390,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 MarioDerTrader has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan MarioDerTrader has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  namtheweebs: {
+    id: 232490245,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 NaMTheWeebs has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan NaMTheWeebs has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  verweisunq: {
+    id: 176866885,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 verweisunq has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan verweisunq has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  tschuliaan: {
+    id: 170755694,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 tschuliaan has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan tschuliaan has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  headhunter67: {
+    id: 77747881,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Headhunter67 has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Headhunter67 has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  ooknumber14: {
+    id: 471849325,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 ooknumber14 has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan ooknumber14 has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  enozo_: {
+    id: 70728246,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 ENOZO_ has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan ENOZO_ has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  mariuszicutie: {
+    id: 406378614,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 マリウシュキューティ has gone live PogChamp 👉 ",
+      offline:
+        "FeelsBadMan マリウシュキューティ has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  seanc26_: {
+    id: 597080573,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Seanc26_ has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Seanc26_ has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  schmortyy: {
+    id: 210120795,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Schmortyy has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Schmortyy has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  nurwlan: {
+    id: 167943175,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 nurWlan has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan nurWlan has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  jacktherippergb: {
+    id: 80060141,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 JackTheRipperGB has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan JackTheRipperGB has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  speedster05: {
+    id: 128973455,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Speedster05 has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Speedster05 has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  vinxibinxi: {
+    id: 164849818,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 VinxiBinxi has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan VinxiBinxi has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  splatoxic: {
+    id: 463487079,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Splatoxic has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Splatoxic has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  th3mc: {
+    id: 173517095,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Th3MC has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Th3MC has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  "2o3a": {
+    id: 92111909,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 2O3A has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan 2O3A has gone offline FeelsBadMan 👉 ",
     },
   },
 };
