@@ -1493,6 +1493,18 @@ let enabledChannels = {
       offline: "FeelsBadMan 2O3A has gone offline FeelsBadMan 👉 ",
     },
   },
+    "lacari": {
+        id: 29400754,
+        formats: {
+            title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+            game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+            live: "PogChamp 👉 Lacari has gone live PogChamp 👉 ",
+            offline: "FeelsBadMan Lacari has gone offline FeelsBadMan 👉 ",
+        },
+        protection: {
+            endpoint: "https://lacari.live/api/v1/banphrases/test",
+        },
+    },
 };
 
 opts.channels.push(...Object.keys(enabledChannels));
