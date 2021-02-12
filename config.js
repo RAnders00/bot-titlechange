@@ -1405,9 +1405,9 @@ let enabledChannels = {
   mariuszicutie: {
     id: 406378614,
     formats: {
-      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
-      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
-      live: "PogChamp 👉 マリウシュキューティ has gone live PogChamp 👉 ",
+      title: "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+      game: "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+      live: "PagChomp 👉 マリウシュキューティ has gone live PagChomp 👉 ",
       offline:
         "FeelsBadMan マリウシュキューティ has gone offline FeelsBadMan 👉 ",
     },
@@ -1493,19 +1493,118 @@ let enabledChannels = {
       offline: "FeelsBadMan 2O3A has gone offline FeelsBadMan 👉 ",
     },
   },
-    "lacari": {
-        id: 29400754,
-        formats: {
-            title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
-            game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
-            live: "PogChamp 👉 Lacari has gone live PogChamp 👉 ",
-            offline: "FeelsBadMan Lacari has gone offline FeelsBadMan 👉 ",
-        },
-        protection: {
-            endpoint: "https://lacari.live/api/v1/banphrases/test",
-            whisperCommandResponses: true,
-        },
+  incyrox: {
+    id: 104529093,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 IncyroX has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan IncyroX has gone offline FeelsBadMan 👉 ",
     },
+  },
+  katelynerika: {
+    id: 128577125,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 katelynerika has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan katelynerika has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  steamyfreshmeme: {
+    id: 79910266,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 SteamyFreshMeme has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan SteamyFreshMeme has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  telvann: {
+    id: 47978608,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 telvann has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan telvann has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  colinzxy: {
+    id: 488687677,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 colinzxy has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan colinzxy has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  mix____: {
+    id: 90805874,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Mix____ has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Mix____ has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  skurrpy: {
+    id: 499896742,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 skurrpy has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan skurrpy has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  sommy_x: {
+    id: 76848083,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 sommy_x has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan sommy_x has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  rumathra: {
+    id: 41567638,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Rumathra has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Rumathra has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  guntyp_: {
+    id: 444387719,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 guntyp_ has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan guntyp_ has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  pagshake: {
+    id: 168486056,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 pagshake has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan pagshake has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  lacari: {
+    id: 29400754,
+      formats: {
+        title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+        game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+        live: "PogChamp 👉 Lacari has gone live PogChamp 👉 ",
+        offline: "FeelsBadMan Lacari has gone offline FeelsBadMan 👉 ",
+      },
+      protection: {
+        endpoint: "https://lacari.live/api/v1/banphrases/test",
+        whisperCommandResponses: true,
+      },
+  },
 };
 
 opts.channels.push(...Object.keys(enabledChannels));
