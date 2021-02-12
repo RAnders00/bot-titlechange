@@ -1557,7 +1557,7 @@ let enabledChannels = {
     },
   },
   sommy_x: {
-    id: 76848083 ,
+    id: 76848083,
     formats: {
       title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
       game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
@@ -1566,7 +1566,7 @@ let enabledChannels = {
     },
   },
   rumathra: {
-    id: 41567638  ,
+    id: 41567638,
     formats: {
       title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
       game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
@@ -1575,12 +1575,21 @@ let enabledChannels = {
     },
   },
   guntyp_: {
-    id: 444387719   ,
+    id: 444387719,
     formats: {
       title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
       game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
       live: "PogChamp 👉 guntyp_ has gone live PogChamp 👉 ",
       offline: "FeelsBadMan guntyp_ has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  pagshake: {
+    id: 168486056,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 pagshake has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan pagshake has gone offline FeelsBadMan 👉 ",
     },
   },
 };
