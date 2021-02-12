@@ -1503,6 +1503,7 @@ let enabledChannels = {
         },
         protection: {
             endpoint: "https://lacari.live/api/v1/banphrases/test",
+            whisperCommandResponses: true,
         },
     },
 };
