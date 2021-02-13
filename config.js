@@ -1600,8 +1600,8 @@ let enabledChannels = {
       live: "PogChamp 👉 Jannick__ has gone live PogChamp 👉 ",
       offline: "FeelsBadMan Jannick__ has gone offline FeelsBadMan 👉 ",
     },
-  lacari: {
-    id: 29400754,
+    lacari: {
+      id: 29400754,
       formats: {
         title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
         game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
@@ -1612,6 +1612,7 @@ let enabledChannels = {
         endpoint: "https://lacari.live/api/v1/banphrases/test",
         whisperCommandResponses: true,
       },
+    },
   },
 };
 
