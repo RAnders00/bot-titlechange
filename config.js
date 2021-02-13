@@ -1592,6 +1592,15 @@ let enabledChannels = {
       offline: "FeelsBadMan pagshake has gone offline FeelsBadMan 👉 ",
     },
   },
+  jannick__: {
+    id: 488942375,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Jannick__ has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Jannick__ has gone offline FeelsBadMan 👉 ",
+    },
+  },
 };
 
 opts.channels.push(...Object.keys(enabledChannels));
