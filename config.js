@@ -80,9 +80,9 @@ let enabledChannels = {
   pajlada: {
     id: 11148817,
     formats: {
-      title: "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
-      game: "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-      live: `PagChomp 👉 ${obfuscateName("pajlada")} has gone live pajaH 👉 `,
+      title: "PAGLADA NEW TITLE! PAGLADA 👉 $VALUE$ 👉 ",
+      game: "PAGLADA NEW GAME! PAGLADA 👉 $VALUE$ 👉 ",
+      live: `PAGLADA 👉 ${obfuscateName("pajlada")} has gone live pajaH 👉 `,
       offline: `${obfuscateName(
         "pajlada"
       )} has gone offline pajaWalk1 pajaWalk2 pajaWalk3 🚪 `,
