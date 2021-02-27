@@ -607,10 +607,10 @@ let enabledChannels = {
   kiansly: {
     id: 414653932,
     formats: {
-      title: "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
+      title: "AlienPls NEW TITLE! AlienPls 👉 $VALUE$ 👉 ",
       game: "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-      live: "PagChomp 👉 kiansly has gone live PagChomp 👉 ",
-      offline: "FeelsBadMan kiansly has gone offline FeelsBadMan 👉 ",
+      live: "dankClappers 👉 kiansly has gone live dankClappers 👉 ",
+      offline: "OFFLINECHAT kiansly has gone offline OFFLINECHAT 👉 ",
     },
   },
   omegamk19: {
@@ -620,15 +620,6 @@ let enabledChannels = {
       game: "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
       live: "PagChomp 👉 omegamk19 has gone live PagChomp 👉 ",
       offline: "FeelsBadMan omegamk19 has gone offline FeelsBadMan 👉 ",
-    },
-  },
-  emergencycurse: {
-    id: 76943040,
-    formats: {
-      title: "PagChomp NEW TITLE! PagChomp 👉 $VALUE$ 👉 ",
-      game: "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
-      live: "PagChomp 👉 EmergencyCurse has gone live PagChomp 👉 ",
-      offline: "FeelsBadMan EmergencyCurse has gone offline FeelsBadMan 👉 ",
     },
   },
   harmfulopinions: {
@@ -1687,6 +1678,51 @@ let enabledChannels = {
       game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
       live: "PogChamp 👉 Kartffl has gone live PogChamp 👉 ",
       offline: "FeelsBadMan Kartffl has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  papilucyfer: {
+    id: 418048130,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 papiLucyfer has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan papiLucyfer has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  niweau: {
+    id: 173647946,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 niweau has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan niweau has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  zoro491: {
+    id: 91501224,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 ZoRo491 has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan ZoRo491 has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  stargamestv: {
+    id: 87571905,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 Stargamestv has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan Stargamestv has gone offline FeelsBadMan 👉 ",
+    },
+  },
+  joshiworld: {
+    id: 55208948,
+    formats: {
+      title: "PogChamp NEW TITLE! PogChamp 👉 $VALUE$ 👉 ",
+      game: "PogChamp NEW GAME! PogChamp 👉 $VALUE$ 👉 ",
+      live: "PogChamp 👉 JoshiWorld has gone live PogChamp 👉 ",
+      offline: "FeelsBadMan JoshiWorld has gone offline FeelsBadMan 👉 ",
     },
   },
 };
