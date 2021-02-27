@@ -608,7 +608,7 @@ let enabledChannels = {
     id: 414653932,
     formats: {
       title: "AlienPls NEW TITLE! AlienPls 👉 $VALUE$ 👉 ",
-      game: "PagChomp NEW GAME! PagChomp 👉 $VALUE$ 👉 ",
+      game: "AlienPls NEW GAME! AlienPls 👉 $VALUE$ 👉 ",
       live: "dankClappers 👉 kiansly has gone live dankClappers 👉 ",
       offline: "OFFLINECHAT kiansly has gone offline OFFLINECHAT 👉 ",
     },
