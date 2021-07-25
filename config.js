@@ -153,6 +153,7 @@ let enabledChannels = {
       endpoint: "https://vadikus007.botfactory.live/api/v1/banphrases/test",
       lengthLimit: 350,
       disabledCommands: ["quit", "debug"],
+      offlineOnly: true,
     },
   },
   apa420: {
