@@ -32,7 +32,7 @@ const onlinePrintChannel = "titlechange_bot";
 
 // list of channel names where the bot is not limited to the global 1.2 second
 // slowmode (channels it is broadcaster, moderator or VIP in)
-const modChannels = ["titlechange_bot", "randers", "forsen", "vadikus007"];
+const modChannels = ["titlechange_bot", "randers", "forsen", "vadikus007", "pajlada"];
 
 // tip: use !userid <usernames...> command in the #pajlada chat to get user IDs
 // add the "protection" object to enable pajbot banphrase checking protection
